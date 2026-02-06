@@ -32,6 +32,9 @@ jobs:
       - name: Check Style
         run: pnpm style:check
 
+      - name: Check Markdown
+        run: pnpm md:check
+
       - name: Check Types
         run: pnpm types:check
 
