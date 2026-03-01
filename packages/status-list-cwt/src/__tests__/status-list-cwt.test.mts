@@ -1,4 +1,4 @@
-import { StatusList } from '@owf/identity-common-status-list'
+import { StatusList } from '@owf/status-list'
 import * as cbor from 'cbor-x'
 import { describe, expect, it } from 'vitest'
 import {

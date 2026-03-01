@@ -1,5 +1,5 @@
-import type { BitsPerStatus, StatusListEntry } from '@owf/identity-common-status-list'
-import { SLException, StatusList } from '@owf/identity-common-status-list'
+import type { BitsPerStatus, StatusListEntry } from '@owf/status-list'
+import { SLException, StatusList } from '@owf/status-list'
 import * as cbor from 'cbor-x'
 import type { CWTwithStatusListPayload, StatusListCBOR, StatusListCWTHeader, StatusListCWTPayload } from './types'
 import { CWT_STATUS_LIST_TYPE, CWTStatusListInfoKeys, CWTStatusListKeys } from './types'

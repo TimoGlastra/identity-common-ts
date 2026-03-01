@@ -1,6 +1,6 @@
 import type { JwtPayload } from '@owf/identity-common'
 import { base64urlEncode } from '@owf/identity-common'
-import { StatusList } from '@owf/identity-common-status-list'
+import { StatusList } from '@owf/status-list'
 import { describe, expect, it } from 'vitest'
 import { createHeaderAndPayload, getListFromStatusListJWT, getStatusListFromJWT } from '../status-list-jwt'
 import type { JWTwithStatusListPayload, StatusListJWTHeaderParameters } from '../types'

@@ -1,5 +1,5 @@
 {
-  "name": "@owf/identity-common-status-list",
+  "name": "@owf/status-list",
   "version": "0.0.0",
   "files": [
     "dist"

@@ -1,4 +1,4 @@
-import type { BitsPerStatus, StatusListEntry } from '@owf/identity-common-status-list'
+import type { BitsPerStatus, StatusListEntry } from '@owf/status-list'
 
 // ==================== CWT Types ====================
 

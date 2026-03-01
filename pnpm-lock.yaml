@@ -14,28 +14,28 @@ importers:
       '@changesets/cli':
         specifier: ^2.29.8
         version: 2.29.8(@types/node@25.3.3)
+      '@owf/crypto-browser':
+        specifier: workspace:*
+        version: link:packages/crypto-browser
+      '@owf/crypto-node':
+        specifier: workspace:*
+        version: link:packages/crypto-node
+      '@owf/hash':
+        specifier: workspace:*
+        version: link:packages/hash
       '@owf/identity-common':
         specifier: workspace:*
         version: link:packages/identity-common
-      '@owf/identity-common-crypto-browser':
-        specifier: workspace:*
-        version: link:packages/crypto-browser
-      '@owf/identity-common-crypto-node':
-        specifier: workspace:*
-        version: link:packages/crypto-node
-      '@owf/identity-common-hash':
-        specifier: workspace:*
-        version: link:packages/hash
-      '@owf/identity-common-integrity':
+      '@owf/integrity':
         specifier: workspace:*
         version: link:packages/integrity
-      '@owf/identity-common-status-list':
+      '@owf/status-list':
         specifier: workspace:*
         version: link:packages/status-list
-      '@owf/identity-common-status-list-cwt':
+      '@owf/status-list-cwt':
         specifier: workspace:*
         version: link:packages/status-list-cwt
-      '@owf/identity-common-status-list-jwt':
+      '@owf/status-list-jwt':
         specifier: workspace:*
         version: link:packages/status-list-jwt
       '@types/node':
@@ -84,7 +84,7 @@ importers:
 
   packages/status-list-cwt:
     dependencies:
-      '@owf/identity-common-status-list':
+      '@owf/status-list':
         specifier: workspace:*
         version: link:../status-list
       cbor-x:
@@ -96,7 +96,7 @@ importers:
       '@owf/identity-common':
         specifier: workspace:*
         version: link:../identity-common
-      '@owf/identity-common-status-list':
+      '@owf/status-list':
         specifier: workspace:*
         version: link:../status-list
 

@@ -1,5 +1,5 @@
 {
-  "name": "@owf/identity-common-hash",
+  "name": "@owf/hash",
   "version": "0.0.0",
   "files": [
     "dist"

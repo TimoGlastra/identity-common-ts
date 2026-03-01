@@ -1,5 +1,5 @@
 {
-  "name": "@owf/identity-common-crypto-node",
+  "name": "@owf/crypto-node",
   "version": "0.0.0",
   "files": [
     "dist"

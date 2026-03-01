@@ -1,5 +1,5 @@
 {
-  "name": "@owf/identity-common-integrity",
+  "name": "@owf/integrity",
   "version": "0.0.0",
   "files": [
     "dist"

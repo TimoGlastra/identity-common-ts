@@ -1,5 +1,5 @@
 {
-  "name": "@owf/identity-common-crypto-browser",
+  "name": "@owf/crypto-browser",
   "version": "0.0.0",
   "files": [
     "dist"

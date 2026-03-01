@@ -1,4 +1,4 @@
-# @owf/identity-common-integrity
+# @owf/integrity
 
 W3C Subresource Integrity (SRI) compatible types, calculation, and parsing utilities for digital identity payloads.
 
@@ -13,7 +13,7 @@ W3C Subresource Integrity (SRI) compatible types, calculation, and parsing utili
 ### Define a Secured Type
 
 ```typescript
-import type { Integrity } from '@owf/identity-common-integrity'
+import type { Integrity } from '@owf/integrity'
 
 interface UserProfile {
   id: string
@@ -33,7 +33,7 @@ type SecuredProfile = Integrity<UserProfile, 'contact.email' | 'documents[*].url
 ### Calculate Integrity
 
 ```typescript
-import { calculateIntegrity } from '@owf/identity-common-integrity'
+import { calculateIntegrity } from '@owf/integrity'
 
 const securedUser = await calculateIntegrity(
   user,
@@ -45,7 +45,7 @@ const securedUser = await calculateIntegrity(
 ### Extract & Verify
 
 ```typescript
-import { extractIntegrity } from '@owf/identity-common-integrity'
+import { extractIntegrity } from '@owf/integrity'
 
 const results = extractIntegrity(securedUser)
 ```

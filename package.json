@@ -12,7 +12,7 @@
     "types:check": "tsc --noEmit",
     "style:check": "biome check --unsafe",
     "style:fix": "biome check --write --unsafe",
-    "md:check": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "md:check": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
     "md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\"",
     "build": "pnpm -r build",
     "test": "vitest",
@@ -29,13 +29,13 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "@owf/identity-common": "workspace:*",
-    "@owf/identity-common-crypto-browser": "workspace:*",
-    "@owf/identity-common-crypto-node": "workspace:*",
-    "@owf/identity-common-hash": "workspace:*",
-    "@owf/identity-common-integrity": "workspace:*",
-    "@owf/identity-common-status-list": "workspace:*",
-    "@owf/identity-common-status-list-cwt": "workspace:*",
-    "@owf/identity-common-status-list-jwt": "workspace:*"
+    "@owf/crypto-browser": "workspace:*",
+    "@owf/crypto-node": "workspace:*",
+    "@owf/hash": "workspace:*",
+    "@owf/integrity": "workspace:*",
+    "@owf/status-list": "workspace:*",
+    "@owf/status-list-cwt": "workspace:*",
+    "@owf/status-list-jwt": "workspace:*"
   },
   "engines": {
     "node": ">=20"

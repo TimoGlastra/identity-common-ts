@@ -1,5 +1,5 @@
 {
-  "name": "@owf/identity-common-status-list-cwt",
+  "name": "@owf/status-list-cwt",
   "version": "0.0.0",
   "files": [
     "dist"
@@ -24,7 +24,7 @@
     "build": "tsdown src/index.ts --format esm --dts --sourcemap"
   },
   "dependencies": {
-    "@owf/identity-common-status-list": "workspace:*",
+    "@owf/status-list": "workspace:*",
     "cbor-x": "^1.6.0"
   }
 }
