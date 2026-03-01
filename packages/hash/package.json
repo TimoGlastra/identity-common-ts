@@ -1,16 +1,16 @@
 {
-  "name": "@owf/identity-common",
+  "name": "@owf/identity-common-hash",
   "version": "0.0.0",
   "files": [
     "dist"
   ],
   "license": "Apache-2.0",
   "exports": "./src/index.ts",
-  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/identity-common",
+  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/hash",
   "repository": {
     "type": "git",
     "url": "https://github.com/openwallet-foundation-labs/identity-common-ts",
-    "directory": "packages/identity-common"
+    "directory": "packages/hash"
   },
   "publishConfig": {
     "module": "./dist/index.mjs",
@@ -24,6 +24,6 @@
     "build": "tsdown src/index.ts --format esm --dts --sourcemap"
   },
   "dependencies": {
-    "js-base64": "^3.7.7"
+    "@noble/hashes": "^1.8.0"
   }
 }
