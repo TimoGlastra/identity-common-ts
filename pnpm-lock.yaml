@@ -23,9 +23,9 @@ importers:
       '@owf/integrity':
         specifier: workspace:*
         version: link:packages/integrity
-      '@owf/status-list':
+      '@owf/token-status-list':
         specifier: workspace:*
-        version: link:packages/status-list
+        version: link:packages/token-status-list
       '@types/node':
         specifier: ^25.3.0
         version: 25.3.3
@@ -56,7 +56,7 @@ importers:
 
   packages/integrity: {}
 
-  packages/status-list:
+  packages/token-status-list:
     dependencies:
       '@owf/identity-common':
         specifier: workspace:*

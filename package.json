@@ -31,7 +31,7 @@
     "@owf/identity-common": "workspace:*",
     "@owf/crypto": "workspace:*",
     "@owf/integrity": "workspace:*",
-    "@owf/status-list": "workspace:*"
+    "@owf/token-status-list": "workspace:*"
   },
   "engines": {
     "node": ">=20"

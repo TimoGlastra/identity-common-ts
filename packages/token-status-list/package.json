@@ -1,16 +1,16 @@
 {
-  "name": "@owf/status-list",
+  "name": "@owf/token-status-list",
   "version": "0.0.0",
   "files": [
     "dist"
   ],
   "license": "Apache-2.0",
   "exports": "./src/index.ts",
-  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/status-list",
+  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/token-status-list",
   "repository": {
     "type": "git",
     "url": "https://github.com/openwallet-foundation-labs/identity-common-ts",
-    "directory": "packages/status-list"
+    "directory": "packages/token-status-list"
   },
   "publishConfig": {
     "module": "./dist/index.mjs",

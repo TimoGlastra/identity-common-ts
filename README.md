@@ -49,7 +49,7 @@ Generic, reusable utilities that can be used across any identity solution:
 | [`@owf/identity-common`](./packages/identity-common) | Base types, base64url utilities, and JWT decoding | ✅ Available |
 | [`@owf/integrity`](./packages/integrity) | W3C Subresource Integrity (SRI) calculation and parsing | ✅ Available |
 | [`@owf/crypto`](./packages/crypto) | Web Crypto API wrappers + SHA hash functions (`@noble/hashes`) | ✅ Available |
-| [`@owf/status-list`](./packages/status-list) | Status list bitstring handling, JWT and CWT/CBOR transport | ✅ Available |
+| [`@owf/token-status-list`](./packages/token-status-list) | Status list bitstring handling, JWT and CWT/CBOR transport | ✅ Available |
 | `@owf/jose` | JOSE/JWT implementation with common validation methods | 📋 Planned |
 | `@owf/cose` | COSE/CWT implementation with common validation methods | 📋 Planned |
 | `@owf/x509` | X.509 certificate parsing, creation, and verification | 📋 Planned |
@@ -106,17 +106,17 @@ npm install @owf/crypto
 
 📖 [View package documentation](./packages/crypto/README.md)
 
-### @owf/status-list
+### @owf/token-status-list
 
-[![@owf/status-list version](https://img.shields.io/npm/v/@owf/status-list)](https://npmjs.com/package/@owf/status-list)
+[![@owf/token-status-list version](https://img.shields.io/npm/v/@owf/token-status-list)](https://npmjs.com/package/@owf/token-status-list)
 
 Status list implementation with bitstring handling, compression/decompression, JWT transport layer, and CWT/CBOR transport layer for Token Status Lists (draft-ietf-oauth-status-list).
 
 ```bash
-npm install @owf/status-list
+npm install @owf/token-status-list
 ```
 
-📖 [View package documentation](./packages/status-list/README.md)
+📖 [View package documentation](./packages/token-status-list/README.md)
 
 ---
 
