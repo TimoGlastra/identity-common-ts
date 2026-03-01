@@ -1,4 +1,4 @@
-import type { BitsPerStatus, StatusListEntry } from '@owf/status-list'
+import type { BitsPerStatus, StatusListEntry } from './types'
 
 // ==================== CWT Types ====================
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { digest, ES256, ES384, generateSalt, getHasher } from '../crypto'
 
-describe('crypto-node', () => {
+describe('crypto', () => {
   describe('generateSalt', () => {
     it('should generate a salt of the specified length', () => {
       const salt = generateSalt(16)
@@ -18,30 +18,30 @@ describe('crypto-node', () => {
   })
 
   describe('digest', () => {
-    it('should hash a string with sha-256 by default', () => {
-      const result = digest('hello')
+    it('should hash a string with sha-256 by default', async () => {
+      const result = await digest('hello')
       expect(result).toBeInstanceOf(Uint8Array)
       expect(result.length).toBe(32)
     })
 
-    it('should hash an ArrayBuffer', () => {
+    it('should hash an ArrayBuffer', async () => {
       const encoder = new TextEncoder()
-      const result = digest(encoder.encode('hello').buffer as ArrayBuffer)
+      const result = await digest(encoder.encode('hello').buffer as ArrayBuffer)
       expect(result).toBeInstanceOf(Uint8Array)
       expect(result.length).toBe(32)
     })
 
-    it('should produce consistent results', () => {
-      const a = digest('hello')
-      const b = digest('hello')
+    it('should produce consistent results', async () => {
+      const a = await digest('hello')
+      const b = await digest('hello')
       expect(a).toEqual(b)
     })
   })
 
   describe('getHasher', () => {
-    it('should return a function that hashes with default sha-256', () => {
+    it('should return a function that hashes with default sha-256', async () => {
       const hash = getHasher()
-      const result = hash('hello')
+      const result = await hash('hello')
       expect(result).toBeInstanceOf(Uint8Array)
       expect(result.length).toBe(32)
     })

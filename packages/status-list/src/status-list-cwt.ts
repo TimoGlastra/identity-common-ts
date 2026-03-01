@@ -1,8 +1,9 @@
-import type { BitsPerStatus, StatusListEntry } from '@owf/status-list'
-import { SLException, StatusList } from '@owf/status-list'
 import * as cbor from 'cbor-x'
-import type { CWTwithStatusListPayload, StatusListCBOR, StatusListCWTHeader, StatusListCWTPayload } from './types'
-import { CWT_STATUS_LIST_TYPE, CWTStatusListInfoKeys, CWTStatusListKeys } from './types'
+import type { CWTwithStatusListPayload, StatusListCBOR, StatusListCWTHeader, StatusListCWTPayload } from './cwt-types'
+import { CWT_STATUS_LIST_TYPE, CWTStatusListInfoKeys, CWTStatusListKeys } from './cwt-types'
+import { StatusList } from './status-list'
+import { SLException } from './status-list-exception'
+import type { BitsPerStatus, StatusListEntry } from './types'
 
 function encodeCBORMap(obj: Record<string | number, unknown>): Uint8Array {
   return cbor.encode(obj)

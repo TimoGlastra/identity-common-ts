@@ -1,16 +1,16 @@
 {
-  "name": "@owf/crypto-browser",
+  "name": "@owf/crypto",
   "version": "0.0.0",
   "files": [
     "dist"
   ],
   "license": "Apache-2.0",
   "exports": "./src/index.ts",
-  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/crypto-browser",
+  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/crypto",
   "repository": {
     "type": "git",
     "url": "https://github.com/openwallet-foundation-labs/identity-common-ts",
-    "directory": "packages/crypto-browser"
+    "directory": "packages/crypto"
   },
   "publishConfig": {
     "module": "./dist/index.mjs",
@@ -22,5 +22,8 @@
   },
   "scripts": {
     "build": "tsdown src/index.ts --format esm --dts --sourcemap"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.8.0"
   }
 }

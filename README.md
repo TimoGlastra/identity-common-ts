@@ -48,12 +48,8 @@ Generic, reusable utilities that can be used across any identity solution:
 |---------|-------------|--------|
 | [`@owf/identity-common`](./packages/identity-common) | Base types, base64url utilities, and JWT decoding | ✅ Available |
 | [`@owf/integrity`](./packages/integrity) | W3C Subresource Integrity (SRI) calculation and parsing | ✅ Available |
-| [`@owf/hash`](./packages/hash) | SHA-256/384/512 hash functions via `@noble/hashes` | ✅ Available |
-| [`@owf/crypto-browser`](./packages/crypto-browser) | Web Crypto API wrappers (signing, hashing, key generation) | ✅ Available |
-| [`@owf/crypto-node`](./packages/crypto-node) | Node.js `crypto` wrappers (signing, hashing, key generation) | ✅ Available |
-| [`@owf/status-list`](./packages/status-list) | Core status list bitstring handling and compression | ✅ Available |
-| [`@owf/status-list-jwt`](./packages/status-list-jwt) | JWT transport layer for status lists | ✅ Available |
-| [`@owf/status-list-cwt`](./packages/status-list-cwt) | CWT/CBOR transport layer for status lists | ✅ Available |
+| [`@owf/crypto`](./packages/crypto) | Web Crypto API wrappers + SHA hash functions (`@noble/hashes`) | ✅ Available |
+| [`@owf/status-list`](./packages/status-list) | Status list bitstring handling, JWT and CWT/CBOR transport | ✅ Available |
 | `@owf/jose` | JOSE/JWT implementation with common validation methods | 📋 Planned |
 | `@owf/cose` | COSE/CWT implementation with common validation methods | 📋 Planned |
 | `@owf/x509` | X.509 certificate parsing, creation, and verification | 📋 Planned |
@@ -98,77 +94,29 @@ npm install @owf/integrity
 
 📖 [View package documentation](./packages/integrity/README.md)
 
-### @owf/hash
+### @owf/crypto
 
-[![@owf/hash version](https://img.shields.io/npm/v/@owf/hash)](https://npmjs.com/package/@owf/hash)
+[![@owf/crypto version](https://img.shields.io/npm/v/@owf/crypto)](https://npmjs.com/package/@owf/crypto)
 
-SHA-256, SHA-384, and SHA-512 hash functions powered by `@noble/hashes`.
-
-```bash
-npm install @owf/hash
-```
-
-📖 [View package documentation](./packages/hash/README.md)
-
-### @owf/crypto-browser
-
-[![@owf/crypto-browser version](https://img.shields.io/npm/v/@owf/crypto-browser)](https://npmjs.com/package/@owf/crypto-browser)
-
-Web Crypto API wrappers for signing, hashing, salt generation, and ES256/384/512 key pairs.
+Web Crypto API wrappers for signing, hashing, salt generation, and ES256/384/512 key pairs, plus SHA-256/384/512 hash functions powered by `@noble/hashes`.
 
 ```bash
-npm install @owf/crypto-browser
+npm install @owf/crypto
 ```
 
-📖 [View package documentation](./packages/crypto-browser/README.md)
-
-### @owf/crypto-node
-
-[![@owf/crypto-node version](https://img.shields.io/npm/v/@owf/crypto-node)](https://npmjs.com/package/@owf/crypto-node)
-
-Node.js `crypto` module wrappers for signing, hashing, salt generation, and ES256/384/512 key pairs.
-
-```bash
-npm install @owf/crypto-node
-```
-
-📖 [View package documentation](./packages/crypto-node/README.md)
+📖 [View package documentation](./packages/crypto/README.md)
 
 ### @owf/status-list
 
 [![@owf/status-list version](https://img.shields.io/npm/v/@owf/status-list)](https://npmjs.com/package/@owf/status-list)
 
-Core status list implementation with bitstring handling, compression, and decompression.
+Status list implementation with bitstring handling, compression/decompression, JWT transport layer, and CWT/CBOR transport layer for Token Status Lists (draft-ietf-oauth-status-list).
 
 ```bash
 npm install @owf/status-list
 ```
 
 📖 [View package documentation](./packages/status-list/README.md)
-
-### @owf/status-list-jwt
-
-[![@owf/status-list-jwt version](https://img.shields.io/npm/v/@owf/status-list-jwt)](https://npmjs.com/package/@owf/status-list-jwt)
-
-JWT transport layer for creating and reading status list tokens.
-
-```bash
-npm install @owf/status-list-jwt
-```
-
-📖 [View package documentation](./packages/status-list-jwt/README.md)
-
-### @owf/status-list-cwt
-
-[![@owf/status-list-cwt version](https://img.shields.io/npm/v/@owf/status-list-cwt)](https://npmjs.com/package/@owf/status-list-cwt)
-
-CWT/CBOR transport layer for creating and reading status list tokens.
-
-```bash
-npm install @owf/status-list-cwt
-```
-
-📖 [View package documentation](./packages/status-list-cwt/README.md)
 
 ---
 

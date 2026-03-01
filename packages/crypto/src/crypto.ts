@@ -1,27 +1,21 @@
-import { createHash, randomBytes, subtle } from 'node:crypto'
-
 export const generateSalt = (length: number): string => {
   if (length <= 0) {
     return ''
   }
-  const saltBytes = randomBytes(length)
-  const salt = saltBytes.toString('hex')
-  return salt.substring(0, length)
+  // a hex is represented by 2 characters, so we split the length by 2
+  const array = new Uint8Array(length / 2)
+  globalThis.crypto.getRandomValues(array)
+
+  const salt = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('')
+
+  return salt
 }
 
-export const digest = (data: string | ArrayBuffer, algorithm = 'sha-256'): Uint8Array => {
-  const nodeAlg = toNodeCryptoAlg(algorithm)
-  const hash = createHash(nodeAlg)
-  if (typeof data === 'string') {
-    hash.update(data)
-  } else {
-    hash.update(Buffer.from(data))
-  }
-  const hashBuffer = hash.digest()
-  return new Uint8Array(hashBuffer)
+export async function digest(data: string | ArrayBuffer, algorithm = 'sha-256'): Promise<Uint8Array> {
+  const ec = new TextEncoder()
+  const result = await globalThis.crypto.subtle.digest(algorithm, typeof data === 'string' ? ec.encode(data) : data)
+  return new Uint8Array(result)
 }
-
-const toNodeCryptoAlg = (hashAlg: string): string => hashAlg.replace('-', '').toLowerCase()
 
 export const getHasher = (algorithm = 'sha-256') => {
   return (data: string) => digest(data, algorithm)
@@ -39,20 +33,20 @@ type SignAlgorithm = AlgorithmIdentifier | RsaPssParams | EcdsaParams
 type VerifyAlgorithm = AlgorithmIdentifier | RsaPssParams | EcdsaParams
 
 export async function generateKeyPair(keyAlgorithm: GenerateKeyAlgorithm) {
-  const keyPair = await subtle.generateKey(keyAlgorithm, true, ['sign', 'verify'])
+  const keyPair = await globalThis.crypto.subtle.generateKey(keyAlgorithm, true, ['sign', 'verify'])
 
-  const publicKeyJWK = await subtle.exportKey('jwk', keyPair.publicKey)
-  const privateKeyJWK = await subtle.exportKey('jwk', keyPair.privateKey)
+  const publicKeyJWK = await globalThis.crypto.subtle.exportKey('jwk', keyPair.publicKey)
+  const privateKeyJWK = await globalThis.crypto.subtle.exportKey('jwk', keyPair.privateKey)
 
   return { publicKey: publicKeyJWK, privateKey: privateKeyJWK }
 }
 
 export async function getSigner(privateKeyJWK: object, keyAlgorithm: ImportKeyAlgorithm, signAlgorithm: SignAlgorithm) {
-  const privateKey = await subtle.importKey('jwk', privateKeyJWK, keyAlgorithm, true, ['sign'])
+  const privateKey = await globalThis.crypto.subtle.importKey('jwk', privateKeyJWK, keyAlgorithm, true, ['sign'])
 
   return async (data: string) => {
     const encoder = new TextEncoder()
-    const signature = await subtle.sign(signAlgorithm, privateKey, encoder.encode(data))
+    const signature = await globalThis.crypto.subtle.sign(signAlgorithm, privateKey, encoder.encode(data))
 
     return btoa(String.fromCharCode(...new Uint8Array(signature)))
       .replace(/\+/g, '-')
@@ -66,14 +60,14 @@ export async function getVerifier(
   keyAlgorithm: ImportKeyAlgorithm,
   verifyAlgorithm: VerifyAlgorithm
 ) {
-  const publicKey = await subtle.importKey('jwk', publicKeyJWK, keyAlgorithm, true, ['verify'])
+  const publicKey = await globalThis.crypto.subtle.importKey('jwk', publicKeyJWK, keyAlgorithm, true, ['verify'])
 
   return async (data: string, signatureBase64url: string) => {
     const encoder = new TextEncoder()
     const signature = Uint8Array.from(atob(signatureBase64url.replace(/-/g, '+').replace(/_/g, '/')), (c) =>
       c.charCodeAt(0)
     )
-    const isValid = await subtle.verify(verifyAlgorithm, publicKey, signature, encoder.encode(data))
+    const isValid = await globalThis.crypto.subtle.verify(verifyAlgorithm, publicKey, signature, encoder.encode(data))
 
     return isValid
   }

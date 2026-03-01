@@ -1,9 +1,10 @@
 import type { JwtPayload } from '@owf/identity-common'
 import { base64UrlToUint8Array, base64urlDecode, uint8ArrayToBase64Url } from '@owf/identity-common'
-import type { StatusListEntry } from '@owf/status-list'
-import { SLException, StatusList } from '@owf/status-list'
-import type { JWTwithStatusListPayload, StatusListJWTHeaderParameters, StatusListJWTPayload } from './types'
-import { JWT_STATUS_LIST_TYPE } from './types'
+import type { JWTwithStatusListPayload, StatusListJWTHeaderParameters, StatusListJWTPayload } from './jwt-types'
+import { JWT_STATUS_LIST_TYPE } from './jwt-types'
+import { StatusList } from './status-list'
+import { SLException } from './status-list-exception'
+import type { StatusListEntry } from './types'
 
 /**
  * Decode a JWT and return the payload.

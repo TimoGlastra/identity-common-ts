@@ -14,15 +14,9 @@ importers:
       '@changesets/cli':
         specifier: ^2.29.8
         version: 2.29.8(@types/node@25.3.3)
-      '@owf/crypto-browser':
+      '@owf/crypto':
         specifier: workspace:*
-        version: link:packages/crypto-browser
-      '@owf/crypto-node':
-        specifier: workspace:*
-        version: link:packages/crypto-node
-      '@owf/hash':
-        specifier: workspace:*
-        version: link:packages/hash
+        version: link:packages/crypto
       '@owf/identity-common':
         specifier: workspace:*
         version: link:packages/identity-common
@@ -32,12 +26,6 @@ importers:
       '@owf/status-list':
         specifier: workspace:*
         version: link:packages/status-list
-      '@owf/status-list-cwt':
-        specifier: workspace:*
-        version: link:packages/status-list-cwt
-      '@owf/status-list-jwt':
-        specifier: workspace:*
-        version: link:packages/status-list-jwt
       '@types/node':
         specifier: ^25.3.0
         version: 25.3.3
@@ -54,11 +42,7 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@25.3.3)(jiti@2.6.1)(msw@2.12.7(@types/node@25.3.3)(typescript@5.9.3))
 
-  packages/crypto-browser: {}
-
-  packages/crypto-node: {}
-
-  packages/hash:
+  packages/crypto:
     dependencies:
       '@noble/hashes':
         specifier: ^1.8.0
@@ -74,6 +58,12 @@ importers:
 
   packages/status-list:
     dependencies:
+      '@owf/identity-common':
+        specifier: workspace:*
+        version: link:../identity-common
+      cbor-x:
+        specifier: ^1.6.0
+        version: 1.6.0
       pako:
         specifier: ^2.1.0
         version: 2.1.0
@@ -81,24 +71,6 @@ importers:
       '@types/pako':
         specifier: ^2.0.4
         version: 2.0.4
-
-  packages/status-list-cwt:
-    dependencies:
-      '@owf/status-list':
-        specifier: workspace:*
-        version: link:../status-list
-      cbor-x:
-        specifier: ^1.6.0
-        version: 1.6.0
-
-  packages/status-list-jwt:
-    dependencies:
-      '@owf/identity-common':
-        specifier: workspace:*
-        version: link:../identity-common
-      '@owf/status-list':
-        specifier: workspace:*
-        version: link:../status-list
 
 packages:
 
