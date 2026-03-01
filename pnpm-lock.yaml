@@ -17,6 +17,9 @@ importers:
       '@owf/identity-common':
         specifier: workspace:*
         version: link:packages/identity-common
+      '@owf/identity-common-integrity':
+        specifier: workspace:*
+        version: link:packages/integrity
       '@types/node':
         specifier: ^25.2.0
         version: 25.2.0
@@ -31,6 +34,8 @@ importers:
         version: 4.0.18(@types/node@25.2.0)(jiti@2.6.1)(msw@2.12.7(@types/node@25.2.0)(typescript@5.9.3))
 
   packages/identity-common: {}
+
+  packages/integrity: {}
 
 packages:
 

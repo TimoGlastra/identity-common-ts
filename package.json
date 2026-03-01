@@ -24,7 +24,8 @@
     "tsdown": "^0.20.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
-    "@owf/identity-common": "workspace:*"
+    "@owf/identity-common": "workspace:*",
+    "@owf/identity-common-integrity": "workspace:*"
   },
   "engines": {
     "node": ">=18"
