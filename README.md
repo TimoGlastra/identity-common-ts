@@ -47,7 +47,6 @@ Generic, reusable utilities that can be used across any identity solution:
 | Package | Description | Status |
 |---------|-------------|--------|
 | [`@owf/identity-common`](./packages/identity-common) | Base types, base64url utilities, and JWT decoding | ✅ Available |
-| [`@owf/integrity`](./packages/integrity) | W3C Subresource Integrity (SRI) calculation and parsing | ✅ Available |
 | [`@owf/crypto`](./packages/crypto) | Web Crypto API wrappers + SHA hash functions (`@noble/hashes`) | ✅ Available |
 | [`@owf/token-status-list`](./packages/token-status-list) | Status list bitstring handling, JWT and CWT/CBOR transport | ✅ Available |
 | `@owf/jose` | JOSE/JWT implementation with common validation methods | 📋 Planned |
@@ -81,18 +80,6 @@ npm install @owf/identity-common
 ```
 
 📖 [View package documentation](./packages/identity-common/README.md)
-
-### @owf/integrity
-
-[![@owf/integrity version](https://img.shields.io/npm/v/@owf/integrity)](https://npmjs.com/package/@owf/integrity)
-
-W3C Subresource Integrity (SRI) calculation, parsing, and validation.
-
-```bash
-npm install @owf/integrity
-```
-
-📖 [View package documentation](./packages/integrity/README.md)
 
 ### @owf/crypto
 

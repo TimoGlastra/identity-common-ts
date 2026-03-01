@@ -20,9 +20,6 @@ importers:
       '@owf/identity-common':
         specifier: workspace:*
         version: link:packages/identity-common
-      '@owf/integrity':
-        specifier: workspace:*
-        version: link:packages/integrity
       '@owf/token-status-list':
         specifier: workspace:*
         version: link:packages/token-status-list
@@ -53,8 +50,6 @@ importers:
       js-base64:
         specifier: ^3.7.7
         version: 3.7.8
-
-  packages/integrity: {}
 
   packages/token-status-list:
     dependencies:
