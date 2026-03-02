@@ -21,16 +21,16 @@
     "changeset-version": "pnpm changeset version && pnpm style:fix"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.14",
+    "@biomejs/biome": "2.4.4",
     "@changesets/cli": "^2.29.8",
-    "@types/node": "^25.3.0",
-    "markdownlint-cli2": "^0.18.1",
-    "tsdown": "^0.20.3",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18",
-    "@owf/identity-common": "workspace:*",
     "@owf/crypto": "workspace:*",
-    "@owf/token-status-list": "workspace:*"
+    "@owf/identity-common": "workspace:*",
+    "@owf/token-status-list": "workspace:*",
+    "@types/node": "^25.3.3",
+    "markdownlint-cli2": "^0.21.0",
+    "tsdown": "0.21.0-beta.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "engines": {
     "node": ">=20"
