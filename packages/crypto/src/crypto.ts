@@ -1,4 +1,4 @@
-import { uint8ArrayToBase64Url, base64UrlToUint8Array } from '@owf/identity-common'
+import { base64UrlToUint8Array, uint8ArrayToBase64Url } from '@owf/identity-common'
 
 export const generateSalt = (length: number): string => {
   if (length <= 0) {
