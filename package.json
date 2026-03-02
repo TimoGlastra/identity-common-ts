@@ -13,7 +13,7 @@
     "style:check": "biome check --unsafe",
     "style:fix": "biome check --write --unsafe",
     "md:check": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
-    "md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\"",
+    "md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#**/node_modules\"",
     "build": "pnpm -r build",
     "test": "vitest",
     "create-package": "node scripts/create-package.mjs",
