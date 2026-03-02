@@ -64,7 +64,12 @@ export async function getVerifier(
   return async (data: string, signatureBase64url: string) => {
     const encoder = new TextEncoder()
     const signature = base64UrlToUint8Array(signatureBase64url)
-    const isValid = await globalThis.crypto.subtle.verify(verifyAlgorithm, publicKey, signature, encoder.encode(data))
+    const isValid = await globalThis.crypto.subtle.verify(
+      verifyAlgorithm,
+      publicKey,
+      signature.buffer as ArrayBuffer,
+      encoder.encode(data)
+    )
 
     return isValid
   }
