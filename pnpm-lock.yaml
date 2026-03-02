@@ -44,6 +44,9 @@ importers:
       '@noble/hashes':
         specifier: ^1.8.0
         version: 1.8.0
+      '@owf/identity-common':
+        specifier: workspace:*
+        version: link:../identity-common
 
   packages/identity-common:
     dependencies:

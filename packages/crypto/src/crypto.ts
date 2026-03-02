@@ -1,3 +1,5 @@
+import { uint8ArrayToBase64Url, base64UrlToUint8Array } from '@owf/identity-common'
+
 export const generateSalt = (length: number): string => {
   if (length <= 0) {
     return ''
@@ -48,10 +50,7 @@ export async function getSigner(privateKeyJWK: object, keyAlgorithm: ImportKeyAl
     const encoder = new TextEncoder()
     const signature = await globalThis.crypto.subtle.sign(signAlgorithm, privateKey, encoder.encode(data))
 
-    return btoa(String.fromCharCode(...new Uint8Array(signature)))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '')
+    return uint8ArrayToBase64Url(new Uint8Array(signature))
   }
 }
 
@@ -64,9 +63,7 @@ export async function getVerifier(
 
   return async (data: string, signatureBase64url: string) => {
     const encoder = new TextEncoder()
-    const signature = Uint8Array.from(atob(signatureBase64url.replace(/-/g, '+').replace(/_/g, '/')), (c) =>
-      c.charCodeAt(0)
-    )
+    const signature = base64UrlToUint8Array(signatureBase64url)
     const isValid = await globalThis.crypto.subtle.verify(verifyAlgorithm, publicKey, signature, encoder.encode(data))
 
     return isValid
