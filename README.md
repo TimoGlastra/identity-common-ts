@@ -46,11 +46,12 @@ Generic, reusable utilities that can be used across any identity solution:
 
 | Package | Description | Status |
 |---------|-------------|--------|
-| [`@owf/identity-common`](./packages/identity-common) | Base package with common types and utilities | 🚧 In Development |
+| [`@owf/identity-common`](./packages/identity-common) | Base types, base64url utilities, and JWT decoding | ✅ Available |
+| [`@owf/crypto`](./packages/crypto) | Web Crypto API wrappers + SHA hash functions (`@noble/hashes`) | ✅ Available |
+| [`@owf/token-status-list`](./packages/token-status-list) | Status list bitstring handling, JWT and CWT/CBOR transport | ✅ Available |
 | `@owf/jose` | JOSE/JWT implementation with common validation methods | 📋 Planned |
 | `@owf/cose` | COSE/CWT implementation with common validation methods | 📋 Planned |
 | `@owf/x509` | X.509 certificate parsing, creation, and verification | 📋 Planned |
-| `@owf/token-status-list` | JWT/CWT Token Status List implementation | 📋 Planned |
 
 #### EUDI-Specific Tools
 
@@ -72,17 +73,37 @@ Tools specific to the [European Digital Identity (EUDI) Wallet](https://ec.europ
 
 [![@owf/identity-common version](https://img.shields.io/npm/v/@owf/identity-common)](https://npmjs.com/package/@owf/identity-common)
 
-The base package providing common types and utilities for identity applications.
+Base types (`JwtPayload`, `JsonWebKey`, `Signer`, `Verifier`, `Hasher`), base64url encode/decode, and JWT decoding.
 
 ```bash
 npm install @owf/identity-common
 ```
 
-```typescript
-import { } from '@owf/identity-common'
+📖 [View package documentation](./packages/identity-common/README.md)
+
+### @owf/crypto
+
+[![@owf/crypto version](https://img.shields.io/npm/v/@owf/crypto)](https://npmjs.com/package/@owf/crypto)
+
+Web Crypto API wrappers for signing, hashing, salt generation, and ES256/384/512 key pairs, plus SHA-256/384/512 hash functions powered by `@noble/hashes`.
+
+```bash
+npm install @owf/crypto
 ```
 
-📖 [View package documentation](./packages/identity-common/README.md)
+📖 [View package documentation](./packages/crypto/README.md)
+
+### @owf/token-status-list
+
+[![@owf/token-status-list version](https://img.shields.io/npm/v/@owf/token-status-list)](https://npmjs.com/package/@owf/token-status-list)
+
+Status list implementation with bitstring handling, compression/decompression, JWT transport layer, and CWT/CBOR transport layer for Token Status Lists (draft-ietf-oauth-status-list).
+
+```bash
+npm install @owf/token-status-list
+```
+
+📖 [View package documentation](./packages/token-status-list/README.md)
 
 ---
 
