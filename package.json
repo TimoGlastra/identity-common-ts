@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
-    "@changesets/cli": "^2.29.8",
+    "@changesets/cli": "^2.30.0",
     "@owf/crypto": "workspace:*",
     "@owf/identity-common": "workspace:*",
     "@owf/token-status-list": "workspace:*",
