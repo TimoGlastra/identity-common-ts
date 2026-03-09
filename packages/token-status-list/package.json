@@ -24,7 +24,7 @@
     "build": "tsdown src/index.ts --format esm --dts --sourcemap"
   },
   "dependencies": {
-    "cbor-x": "^1.6.0",
+    "cbor-x": "^1.6.3",
     "pako": "^2.1.0",
     "@owf/identity-common": "workspace:*"
   },
