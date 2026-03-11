@@ -78,15 +78,6 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4
 
-  packages/trust-list-sdk:
-    dependencies:
-      '@owf/crypto':
-        specifier: workspace:*
-        version: link:../crypto
-      '@owf/identity-common':
-        specifier: workspace:*
-        version: link:../identity-common
-
 packages:
 
   '@babel/generator@8.0.0-rc.2':
