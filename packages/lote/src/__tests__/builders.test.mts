@@ -125,13 +125,13 @@ describe('ServiceBuilder', () => {
   it('should throw when service name is missing', () => {
     expect(() => {
       service().addPublicKey({ kty: 'EC' }).build()
-    }).toThrow('Service name is required')
+    }).toThrow('Invalid TrustedEntityService')
   })
 
   it('should throw when digital identity is missing', () => {
     expect(() => {
       service().name('Test Service').build()
-    }).toThrow('Service digital identity is required')
+    }).toThrow('Invalid TrustedEntityService')
   })
 })
 
@@ -348,7 +348,7 @@ describe('TrustedEntityBuilder', () => {
         .email('test@example.com')
         .addService(service().name('Svc').addPublicKey({ kty: 'EC' }).build())
         .build()
-    }).toThrow('Entity name is required')
+    }).toThrow('Invalid TrustedEntity')
   })
 
   it('should throw when address is missing', () => {
@@ -357,6 +357,6 @@ describe('TrustedEntityBuilder', () => {
         .name('Test Entity')
         .addService(service().name('Svc').addPublicKey({ kty: 'EC' }).build())
         .build()
-    }).toThrow('Entity address is required')
+    }).toThrow('Invalid TrustedEntity')
   })
 })

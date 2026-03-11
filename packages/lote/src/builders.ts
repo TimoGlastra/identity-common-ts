@@ -1,3 +1,4 @@
+import { TrustedEntitySchema, TrustedEntityServiceSchema } from './schemas'
 import type {
   JWKPublicKey,
   PostalAddress,
@@ -105,17 +106,17 @@ export class TrustedEntityBuilder {
    * Build the TrustedEntity object
    */
   build(): TrustedEntity {
-    if (!this.info.TEName || this.info.TEName.length === 0) {
-      throw new Error('Entity name is required')
-    }
-    if (!this.info.TEAddress) {
-      throw new Error('Entity address is required')
+    const result = TrustedEntitySchema.safeParse({
+      TrustedEntityInformation: this.info,
+      TrustedEntityServices: this.services,
+    })
+
+    if (!result.success) {
+      const messages = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('\n')
+      throw new Error(`Invalid TrustedEntity:\n${messages}`)
     }
 
-    return {
-      TrustedEntityInformation: this.info as TrustedEntityInformation,
-      TrustedEntityServices: this.services,
-    }
+    return result.data
   }
 }
 
@@ -245,22 +246,22 @@ export class ServiceBuilder {
    * Build the TrustedEntityService object
    */
   build(): TrustedEntityService {
-    if (!this.info.ServiceName || this.info.ServiceName.length === 0) {
-      throw new Error('Service name is required')
-    }
-    if (!this.info.ServiceDigitalIdentity) {
-      throw new Error('Service digital identity is required')
-    }
-
-    const service: TrustedEntityService = {
-      ServiceInformation: this.info as ServiceInformation,
+    const data: Record<string, unknown> = {
+      ServiceInformation: this.info,
     }
 
     if (this.history.length > 0) {
-      service.ServiceHistory = this.history
+      data.ServiceHistory = this.history
     }
 
-    return service
+    const result = TrustedEntityServiceSchema.safeParse(data)
+
+    if (!result.success) {
+      const messages = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('\n')
+      throw new Error(`Invalid TrustedEntityService:\n${messages}`)
+    }
+
+    return result.data
   }
 }
 
