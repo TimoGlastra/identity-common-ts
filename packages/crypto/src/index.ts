@@ -11,4 +11,4 @@ export {
   getVerifier,
 } from './crypto'
 export { hasher, sha256, sha384, sha512 } from './hash'
-export { base64DerToPem, parseCertificate, parseCertificateChain, parsePrivateKey } from './pem'
+export { base64DerToPem, parseCertificate, parseCertificateChain, pemToDer } from './pem'

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { base64DerToPem, parseCertificate, parseCertificateChain, parsePrivateKey } from '../pem'
+import { base64DerToPem, parseCertificate, parseCertificateChain, pemToDer } from '../pem'
 
 const SAMPLE_CERT_PEM = `-----BEGIN CERTIFICATE-----
 MIIBkTCB+wIJALRiMLAh0ESOMA0GCSqGSIb3DQEBCwUAMBExDzANBgNVBAMMBnRl
@@ -74,29 +74,42 @@ describe('pem', () => {
     })
   })
 
-  describe('parsePrivateKey', () => {
-    it('should accept an EC private key', () => {
-      const result = parsePrivateKey(SAMPLE_EC_KEY_PEM)
-      expect(result).toContain('-----BEGIN EC PRIVATE KEY-----')
+  describe('pemToDer', () => {
+    it('should extract DER from an EC private key', () => {
+      const result = pemToDer(SAMPLE_EC_KEY_PEM)
+      expect(result).not.toContain('-----BEGIN')
+      expect(result).not.toContain('\n')
+      expect(result.length).toBeGreaterThan(0)
     })
 
-    it('should accept an RSA private key', () => {
-      const result = parsePrivateKey(SAMPLE_RSA_KEY_PEM)
-      expect(result).toContain('-----BEGIN RSA PRIVATE KEY-----')
+    it('should extract DER from an RSA private key', () => {
+      const result = pemToDer(SAMPLE_RSA_KEY_PEM)
+      expect(result).not.toContain('-----BEGIN')
+      expect(result).not.toContain('\n')
+      expect(result.length).toBeGreaterThan(0)
     })
 
-    it('should accept a PKCS#8 private key', () => {
-      const result = parsePrivateKey(SAMPLE_PKCS8_KEY_PEM)
-      expect(result).toContain('-----BEGIN PRIVATE KEY-----')
+    it('should extract DER from a PKCS#8 private key', () => {
+      const result = pemToDer(SAMPLE_PKCS8_KEY_PEM)
+      expect(result).not.toContain('-----BEGIN')
+      expect(result).not.toContain('\n')
+      expect(result.length).toBeGreaterThan(0)
     })
 
-    it('should trim whitespace', () => {
-      const result = parsePrivateKey(`  \n${SAMPLE_EC_KEY_PEM}\n  `)
-      expect(result).toBe(SAMPLE_EC_KEY_PEM)
+    it('should extract DER from a certificate', () => {
+      const result = pemToDer(SAMPLE_CERT_PEM)
+      expect(result).not.toContain('-----BEGIN')
+      expect(result).not.toContain('\n')
+      expect(result).toBe(parseCertificate(SAMPLE_CERT_PEM))
     })
 
-    it('should throw on invalid PEM', () => {
-      expect(() => parsePrivateKey('not a key')).toThrow('No valid private key found in PEM string')
+    it('should handle PEM with surrounding whitespace', () => {
+      const result = pemToDer(`  \n${SAMPLE_EC_KEY_PEM}\n  `)
+      expect(result).toBe(pemToDer(SAMPLE_EC_KEY_PEM))
+    })
+
+    it('should throw on invalid input', () => {
+      expect(() => pemToDer('not a pem')).toThrow('No valid PEM block found')
     })
   })
 

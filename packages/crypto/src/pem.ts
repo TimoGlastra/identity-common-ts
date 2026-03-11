@@ -21,22 +21,21 @@ export function parseCertificateChain(pem: string): string[] {
 }
 
 /**
- * Validate and normalize a PEM-encoded private key string.
+ * Parse a PEM-encoded block and return its base64-encoded DER content.
  *
- * @param pem - PEM-encoded private key
- * @returns The normalized (trimmed) PEM string
+ * Supports any PEM type (certificates, private keys, public keys, etc.).
+ *
+ * @param pem - PEM-encoded string
+ * @returns Base64-encoded DER string
  */
-export function parsePrivateKey(pem: string): string {
-  const normalized = pem.trim()
-  const keyRegex =
-    /-----BEGIN (?:EC |RSA |ENCRYPTED )?PRIVATE KEY-----([\s\S]*?)-----END (?:EC |RSA |ENCRYPTED )?PRIVATE KEY-----/
-  const match = normalized.match(keyRegex)
+export function pemToDer(pem: string): string {
+  const match = pem.match(/-----BEGIN [A-Z0-9 ]+-----([\s\S]*?)-----END [A-Z0-9 ]+-----/)
 
   if (!match) {
-    throw new Error('No valid private key found in PEM string')
+    throw new Error('No valid PEM block found')
   }
 
-  return normalized
+  return match[1].replace(/\s/g, '')
 }
 
 /**
