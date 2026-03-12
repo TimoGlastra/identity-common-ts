@@ -1,4 +1,5 @@
 export type { Signer } from '@owf/identity-common'
+export { CryptoException } from './crypto-exception'
 export {
   digest,
   ES256,

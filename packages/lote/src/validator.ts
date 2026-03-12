@@ -4,6 +4,7 @@
  * Runtime validation for ETSI TS 119 602 LoTE documents using Zod schemas.
  */
 
+import { LoTEException } from './lote-exception'
 import { LoTEDocumentSchema } from './schemas'
 import type { LoTEDocument } from './types'
 
@@ -66,6 +67,6 @@ export function assertValidLoTE(loteDocument: unknown): asserts loteDocument is 
   const result = validateLoTE(loteDocument)
   if (!result.valid) {
     const errorMessages = result.errors.map((e) => `${e.path}: ${e.message}`).join('\n')
-    throw new Error(`Invalid LoTE document:\n${errorMessages}`)
+    throw new LoTEException(`Invalid LoTE document:\n${errorMessages}`)
   }
 }

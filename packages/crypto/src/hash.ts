@@ -1,4 +1,5 @@
 import { sha256 as nobleSha256, sha384 as nobleSha384, sha512 as nobleSha512 } from '@noble/hashes/sha2.js'
+import { CryptoException } from './crypto-exception'
 
 const textEncoder = new TextEncoder()
 
@@ -34,6 +35,6 @@ export const hasher = (data: string | ArrayBuffer, algorithm: HasherAlgorithm = 
     case 'sha512':
       return sha512(data)
     default:
-      throw new Error(`Unsupported algorithm: ${algorithm}`)
+      throw new CryptoException(`Unsupported algorithm: ${algorithm}`)
   }
 }

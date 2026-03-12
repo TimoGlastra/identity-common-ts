@@ -1,3 +1,4 @@
+import { LoTEException } from './lote-exception'
 import { TrustedEntitySchema, TrustedEntityServiceSchema } from './schemas'
 import type {
   JWKPublicKey,
@@ -113,7 +114,7 @@ export class TrustedEntityBuilder {
 
     if (!result.success) {
       const messages = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('\n')
-      throw new Error(`Invalid TrustedEntity:\n${messages}`)
+      throw new LoTEException(`Invalid TrustedEntity:\n${messages}`)
     }
 
     return result.data
@@ -258,7 +259,7 @@ export class ServiceBuilder {
 
     if (!result.success) {
       const messages = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('\n')
-      throw new Error(`Invalid TrustedEntityService:\n${messages}`)
+      throw new LoTEException(`Invalid TrustedEntityService:\n${messages}`)
     }
 
     return result.data

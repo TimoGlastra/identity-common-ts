@@ -1,3 +1,5 @@
 export * from './base64url'
 export * from './decode-jwt'
+export * from './identity-common-exception'
+export * from './identity-exception'
 export * from './types'

@@ -7,6 +7,8 @@ export {
   TrustedEntityBuilder,
   trustedEntity,
 } from './builders'
+// Exception
+export { LoTEException } from './lote-exception'
 // Schemas
 export {
   JWKPublicKeySchema,

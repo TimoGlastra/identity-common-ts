@@ -1,3 +1,5 @@
+import { CryptoException } from './crypto-exception'
+
 /**
  * Parse PEM-encoded certificate(s) and return base64-encoded DER strings.
  *
@@ -14,7 +16,7 @@ export function parseCertificateChain(pem: string): string[] {
   }
 
   if (certs.length === 0) {
-    throw new Error('No valid certificates found in PEM string')
+    throw new CryptoException('No valid certificates found in PEM string')
   }
 
   return certs
@@ -32,7 +34,7 @@ export function pemToDer(pem: string): string {
   const match = pem.match(/-----BEGIN [A-Z0-9 ]+-----([\s\S]*?)-----END [A-Z0-9 ]+-----/)
 
   if (!match) {
-    throw new Error('No valid PEM block found')
+    throw new CryptoException('No valid PEM block found')
   }
 
   return match[1].replace(/\s/g, '')
@@ -49,7 +51,7 @@ export function parseCertificate(pem: string): string {
   const match = pem.match(certRegex)
 
   if (!match) {
-    throw new Error('No valid certificate found in PEM string')
+    throw new CryptoException('No valid certificate found in PEM string')
   }
 
   return match[1].replace(/\s/g, '')
