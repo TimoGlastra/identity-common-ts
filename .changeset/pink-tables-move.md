@@ -1,5 +1,5 @@
 ---
-"@owf/lote": patch
+"@owf/eudi-lote": patch
 "@owf/crypto": patch
 "@owf/identity-common": patch
 "@owf/token-status-list": patch
