@@ -7,11 +7,11 @@
   ],
   "license": "Apache-2.0",
   "exports": "./src/index.ts",
-  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/lote",
+  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/eudi-lote",
   "repository": {
     "type": "git",
     "url": "https://github.com/openwallet-foundation-labs/identity-common-ts",
-    "directory": "packages/lote"
+    "directory": "packages/eudi-lote"
   },
   "publishConfig": {
     "module": "./dist/index.mjs",

@@ -59,7 +59,7 @@ Tools specific to the [European Digital Identity (EUDI) Wallet](https://ec.europ
 
 | Package | Description | Status |
 |---------|-------------|--------|
-| [`@owf/eudi-lote`](./packages/lote) | ETSI TS 119 602 Lists of Trusted Entities (LoTE) | ✅ Available |
+| [`@owf/eudi-lote`](./packages/eudi-lote) | ETSI TS 119 602 Lists of Trusted Entities (LoTE) | ✅ Available |
 | `@owf/eudi-certificates` | Registration and access certificate verification | 📋 Planned |
 | `@owf/eudi-payment` | ARF TS 12 Electronic Payment SCA extensions | 📋 Planned |
 
@@ -115,7 +115,7 @@ SDK for creating, signing, and validating Lists of Trusted Entities (LoTE) per E
 npm install @owf/eudi-lote
 ```
 
-📖 [View package documentation](./packages/lote/README.md)
+📖 [View package documentation](./packages/eudi-lote/README.md)
 
 ---
 

@@ -48,9 +48,7 @@ importers:
         specifier: workspace:*
         version: link:../identity-common
 
-  packages/identity-common: {}
-
-  packages/lote:
+  packages/eudi-lote:
     dependencies:
       '@owf/crypto':
         specifier: workspace:*
@@ -61,6 +59,8 @@ importers:
       zod:
         specifier: ^4.3.6
         version: 4.3.6
+
+  packages/identity-common: {}
 
   packages/token-status-list:
     dependencies:
