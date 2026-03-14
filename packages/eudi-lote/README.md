@@ -1,4 +1,4 @@
-# @owf/lote
+# @owf/eudi-lote
 
 SDK for creating, signing, and managing Lists of Trusted Entities (LoTE) per **ETSI TS 119 602**.
 
@@ -10,6 +10,8 @@ This SDK implements the ETSI TS 119 602 standard for LoTE documents, enabling:
 - **Sign LoTE documents** with private keys or custom signers (HSM/KMS)
 - **Validate LoTE documents** against ETSI TS 119 602 schema
 
+> **Note**: This package currently supports **JWT encoding only**. CBOR and XML encodings are not yet supported.
+
 ## Specification Reference
 
 - [ETSI TS 119 602](https://www.etsi.org/deliver/etsi_ts/119600_119699/119602/01.01.01_60/ts_119602v010101p.pdf) - Trusted Lists
@@ -17,9 +19,9 @@ This SDK implements the ETSI TS 119 602 standard for LoTE documents, enabling:
 ## Installation
 
 ```bash
-npm install @owf/lote
+npm install @owf/eudi-lote
 # or
-pnpm add @owf/lote
+pnpm add @owf/eudi-lote
 ```
 
 ## Usage
@@ -32,7 +34,7 @@ import {
   trustedEntity,
   service,
   addTrustedEntity,
-} from '@owf/lote';
+} from '@owf/eudi-lote';
 
 // Create the base LoTE document (only SchemeOperatorName is required)
 let lote = createLoTE({
@@ -161,7 +163,7 @@ const lote = createLoTE({
 ### Signing a LoTE Document
 
 ```typescript
-import { signLoTE } from '@owf/lote';
+import { signLoTE } from '@owf/eudi-lote';
 import { ES256 } from '@owf/crypto';
 
 // With a local key
@@ -193,7 +195,7 @@ const signed = await signLoTE({
 import {
   validateLoTE,
   assertValidLoTE,
-} from '@owf/lote';
+} from '@owf/eudi-lote';
 
 // Get validation result with error details
 const result = validateLoTE(lote);
@@ -212,7 +214,7 @@ import {
   updateLoTEVersion,
   addTrustedEntity,
   removeTrustedEntity,
-} from '@owf/lote';
+} from '@owf/eudi-lote';
 
 // Increment version and update timestamps
 let updatedList = updateLoTEVersion(lote);
@@ -313,7 +315,7 @@ All document types are derived from Zod schemas. You can import and use the sche
 directly for custom validation or to build upon:
 
 ```typescript
-import { LoTEDocumentSchema, TrustedEntitySchema } from '@owf/lote';
+import { LoTEDocumentSchema, TrustedEntitySchema } from '@owf/eudi-lote';
 
 // Use schemas for custom validation
 const result = LoTEDocumentSchema.safeParse(data);

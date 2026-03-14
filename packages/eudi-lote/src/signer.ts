@@ -11,7 +11,7 @@ import type { ListAndSchemeInformation, LoTE, LoTEDocument, SignedLoTE, SignOpti
  * @example Using a local key via @owf/crypto:
  * ```typescript
  * import { ES256 } from '@owf/crypto';
- * import { signLoTE } from '@owf/lote';
+ * import { signLoTE } from '@owf/eudi-lote';
  *
  * const { privateKey } = await ES256.generateKeyPair();
  * const signer = await ES256.getSigner(privateKey);
