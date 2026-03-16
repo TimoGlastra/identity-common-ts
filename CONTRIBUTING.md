@@ -369,6 +369,16 @@ Releases are automated via GitHub Actions:
 2. A "Version Packages" PR is automatically created/updated
 3. Merging the Version PR triggers a release to npm
 
+### Publishing New Packages
+
+When adding a **new package** to the monorepo that has never been published to npm:
+
+1. The first publish requires an `NPM_TOKEN` secret to be configured in the repository
+2. After the initial publish, subsequent releases will use npm's trusted publishing (OIDC-based provenance)
+3. The `NPM_TOKEN` acts as a fallback for packages that don't yet exist on npm
+
+**For maintainers:** Ensure the `NPM_TOKEN` repository secret is configured with an npm automation token that has publish access to the `@owf` scope.
+
 Maintainers will handle the release process.
 
 ## Questions?
