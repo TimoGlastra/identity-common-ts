@@ -45,7 +45,7 @@ export async function verifySchemaMeta(options: VerifyOptions): Promise<Verified
       alg: header.alg as string,
       typ: header.typ as string,
       kid: header.kid as string,
-      x5c: header.x5c as string[] | undefined,
+      x5c: header.x5c as string[],
     },
     payload: parsed.data,
   }

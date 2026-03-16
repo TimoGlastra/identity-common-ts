@@ -103,6 +103,7 @@ const meta = schemaMeta()
 const signed = await signSchemaMeta({
   schemaMeta: meta,
   keyId: 'catalog-signer-2025',
+  certificates: [pemCertificate],
   signer,
 });
 

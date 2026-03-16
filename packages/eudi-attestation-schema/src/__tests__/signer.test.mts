@@ -1,8 +1,15 @@
-import { ES256 } from '@owf/crypto'
+import { ES256, parseCertificate } from '@owf/crypto'
 import { base64urlDecode } from '@owf/identity-common'
 import { describe, expect, it } from 'vitest'
 import { schemaMeta, schemaURI } from '../builders'
 import { signSchemaMeta } from '../signer'
+
+const TEST_CERT = `-----BEGIN CERTIFICATE-----
+MIIBkTCB+wIJALRiMLAh0ESOMA0GCSqGSIb3DQEBCwUAMBExDzANBgNVBAMMBnRl
+c3RDQTAEFW0yNTAxMDEwMDAwMDBaFw0yNjAxMDEwMDAwMDBaMBExDzANBgNVBAMM
+BnRlc3RDQTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHlS+caJv1JJhqecjF8o
+JwBz3GggPLgTTVOp8OZLuzwEN3YWYeEKjXlY5gC0V/pC8F5JuKlOGVTtsDNHJDRy
+-----END CERTIFICATE-----`
 
 describe('signSchemaMeta', () => {
   const buildTestMeta = () =>
@@ -24,6 +31,7 @@ describe('signSchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     expect(signed.jws).toBeDefined()
@@ -40,12 +48,13 @@ describe('signSchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'catalog-signer-2025',
       signer,
+      certificates: [TEST_CERT],
     })
 
     expect(signed.header.alg).toBe('ES256')
     expect(signed.header.typ).toBe('attestation-schema+jwt')
     expect(signed.header.kid).toBe('catalog-signer-2025')
-    expect(signed.header.x5c).toBeUndefined()
+    expect(signed.header.x5c).toEqual([parseCertificate(TEST_CERT)])
   })
 
   it('should encode the SchemaMeta as the JWS payload', async () => {
@@ -57,6 +66,7 @@ describe('signSchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     const [, payloadPart] = signed.jws.split('.')
@@ -76,6 +86,7 @@ describe('signSchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     expect(signed.payload).toEqual(meta)
@@ -91,6 +102,7 @@ describe('signSchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     const [headerPart, payloadPart, signaturePart] = signed.jws.split('.')

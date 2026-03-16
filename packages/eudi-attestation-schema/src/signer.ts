@@ -28,6 +28,7 @@ import type { SignedSchemaMeta, SignOptions } from './types'
  * const signed = await signSchemaMeta({
  *   schemaMeta: meta,
  *   keyId: 'catalog-signer-2025',
+ *   certificates: [pemCertificate],
  *   signer,
  * })
  * ```
@@ -39,10 +40,7 @@ export async function signSchemaMeta(options: SignOptions): Promise<SignedSchema
     alg: algorithm,
     typ: 'attestation-schema+jwt',
     kid: keyId,
-  }
-
-  if (certificates && certificates.length > 0) {
-    header.x5c = certificates.map(parseCertificate)
+    x5c: certificates.map(parseCertificate),
   }
 
   const encodedHeader = base64urlEncode(JSON.stringify(header))
@@ -58,7 +56,7 @@ export async function signSchemaMeta(options: SignOptions): Promise<SignedSchema
       alg: algorithm,
       typ: 'attestation-schema+jwt',
       kid: keyId,
-      x5c: header.x5c as string[] | undefined,
+      x5c: header.x5c as string[],
     },
     payload: schemaMeta,
   }

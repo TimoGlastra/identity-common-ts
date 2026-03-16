@@ -1,9 +1,16 @@
-import { ES256 } from '@owf/crypto'
+import { ES256, parseCertificate } from '@owf/crypto'
 import { base64urlEncode } from '@owf/identity-common'
 import { describe, expect, it } from 'vitest'
 import { schemaMeta, schemaURI } from '../builders'
 import { signSchemaMeta } from '../signer'
 import { verifySchemaMeta } from '../verifier'
+
+const TEST_CERT = `-----BEGIN CERTIFICATE-----
+MIIBkTCB+wIJALRiMLAh0ESOMA0GCSqGSIb3DQEBCwUAMBExDzANBgNVBAMMBnRl
+c3RDQTAEFW0yNTAxMDEwMDAwMDBaFw0yNjAxMDEwMDAwMDBaMBExDzANBgNVBAMM
+BnRlc3RDQTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHlS+caJv1JJhqecjF8o
+JwBz3GggPLgTTVOp8OZLuzwEN3YWYeEKjXlY5gC0V/pC8F5JuKlOGVTtsDNHJDRy
+-----END CERTIFICATE-----`
 
 const buildTestMeta = () =>
   schemaMeta()
@@ -26,6 +33,7 @@ describe('verifySchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     const result = await verifySchemaMeta({ jws: signed.jws, verifier })
@@ -47,6 +55,7 @@ describe('verifySchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     await expect(verifySchemaMeta({ jws: signed.jws, verifier: wrongVerifier })).rejects.toThrow('Invalid signature')
@@ -74,7 +83,7 @@ describe('verifySchemaMeta', () => {
     await expect(verifySchemaMeta({ jws, verifier })).rejects.toThrow('Invalid SchemaMeta payload')
   })
 
-  it('should return typed header with x5c when present', async () => {
+  it('should return typed header with x5c', async () => {
     const { privateKey, publicKey } = await ES256.generateKeyPair()
     const signer = await ES256.getSigner(privateKey)
     const verifier = await ES256.getVerifier(publicKey)
@@ -84,9 +93,10 @@ describe('verifySchemaMeta', () => {
       schemaMeta: meta,
       keyId: 'test-key-1',
       signer,
+      certificates: [TEST_CERT],
     })
 
     const result = await verifySchemaMeta({ jws: signed.jws, verifier })
-    expect(result.header.x5c).toBeUndefined()
+    expect(result.header.x5c).toEqual([parseCertificate(TEST_CERT)])
   })
 })

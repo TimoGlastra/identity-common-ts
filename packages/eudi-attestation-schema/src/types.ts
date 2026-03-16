@@ -45,7 +45,7 @@ export interface SignOptions {
   schemaMeta: SchemaMeta
   keyId: string
   algorithm?: 'ES256' | 'ES384' | 'ES512' | 'RS256' | 'RS384' | 'RS512'
-  certificates?: string[]
+  certificates: string[]
   signer: Signer
 }
 
@@ -55,7 +55,7 @@ export interface SignedSchemaMeta {
     alg: string
     typ: string
     kid: string
-    x5c?: string[]
+    x5c: string[]
   }
   payload: SchemaMeta
 }
@@ -74,7 +74,7 @@ export interface VerifiedSchemaMeta {
     alg: string
     typ: string
     kid: string
-    x5c?: string[]
+    x5c: string[]
   }
   payload: SchemaMeta
 }
