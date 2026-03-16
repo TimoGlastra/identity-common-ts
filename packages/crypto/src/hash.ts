@@ -1,4 +1,5 @@
 import { sha256 as nobleSha256, sha384 as nobleSha384, sha512 as nobleSha512 } from '@noble/hashes/sha2.js'
+import { base64 } from '@owf/identity-common'
 import { CryptoException } from './crypto-exception'
 
 const textEncoder = new TextEncoder()
@@ -37,4 +38,24 @@ export const hasher = (data: string | ArrayBuffer, algorithm: HasherAlgorithm = 
     default:
       throw new CryptoException(`Unsupported algorithm: ${algorithm}`)
   }
+}
+
+export type IntegrityAlgorithm = 'sha256' | 'sha384' | 'sha512'
+
+/**
+ * Compute a W3C Subresource Integrity (SRI) string for the given data.
+ *
+ * @see https://www.w3.org/TR/SRI/
+ *
+ * @example
+ * ```typescript
+ * import { integrity } from '@owf/crypto'
+ *
+ * const sri = integrity('hello world')
+ * // => "sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek="
+ * ```
+ */
+export const integrity = (data: string | ArrayBuffer, algorithm: IntegrityAlgorithm = 'sha256'): string => {
+  const hash = hasher(data, algorithm)
+  return `${algorithm}-${base64.encode(hash)}`
 }

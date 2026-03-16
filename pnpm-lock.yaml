@@ -54,6 +54,18 @@ importers:
         specifier: workspace:*
         version: link:../identity-common
 
+  packages/eudi-attestation-schema:
+    dependencies:
+      '@owf/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@owf/identity-common':
+        specifier: workspace:*
+        version: link:../identity-common
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
+
   packages/eudi-lote:
     dependencies:
       '@owf/crypto':
