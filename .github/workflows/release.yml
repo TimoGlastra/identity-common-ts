@@ -45,7 +45,6 @@ jobs:
           version: pnpm changeset-version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Get current package version
         id: get_version
@@ -86,7 +85,6 @@ jobs:
       - name: Create unstable release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # ensure there's always a patch release created
           cat << 'EOF' > .changeset/snapshot-template-changeset.md
