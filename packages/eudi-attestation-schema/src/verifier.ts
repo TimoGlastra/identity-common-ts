@@ -48,5 +48,6 @@ export async function verifySchemaMeta(options: VerifyOptions): Promise<Verified
       x5c: header.x5c as string[],
     },
     payload: parsed.data,
+    iat: parsed.data.iat || Math.floor(Date.now() / 1000),
   }
 }

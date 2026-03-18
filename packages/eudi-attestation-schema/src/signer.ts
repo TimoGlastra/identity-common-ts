@@ -43,8 +43,11 @@ export async function signSchemaMeta(options: SignOptions): Promise<SignedSchema
     x5c: certificates.map(parseCertificate),
   }
 
+  const iat = Math.floor(Date.now() / 1000)
+  const jwtPayload = { ...schemaMeta, iat }
+
   const encodedHeader = base64urlEncode(JSON.stringify(header))
-  const encodedPayload = base64urlEncode(JSON.stringify(schemaMeta))
+  const encodedPayload = base64urlEncode(JSON.stringify(jwtPayload))
   const signingInput = `${encodedHeader}.${encodedPayload}`
 
   const signature = await signer(signingInput)
@@ -59,5 +62,6 @@ export async function signSchemaMeta(options: SignOptions): Promise<SignedSchema
       x5c: header.x5c as string[],
     },
     payload: schemaMeta,
+    iat,
   }
 }

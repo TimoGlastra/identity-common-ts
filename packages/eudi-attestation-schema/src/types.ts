@@ -58,6 +58,7 @@ export interface SignedSchemaMeta {
     x5c: string[]
   }
   payload: SchemaMeta
+  iat: number
 }
 
 // ============================================================================
@@ -77,4 +78,5 @@ export interface VerifiedSchemaMeta {
     x5c: string[]
   }
   payload: SchemaMeta
+  iat: number
 }

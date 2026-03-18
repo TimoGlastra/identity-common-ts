@@ -1,5 +1,7 @@
 # @owf/eudi-attestation-schema
 
+> **⚠️ Experimental:** This package is experimental. The underlying ETSI specification is not yet finalized, and this implementation is used to test the upcoming approach. Breaking changes are possible until the specification is stable.
+
 SDK for creating, signing, and validating attestation schema metadata (SchemaMeta) per the **EUDI TS11 Catalogue of Attestations** specification.
 
 ## Overview
@@ -108,6 +110,7 @@ const signed = await signSchemaMeta({
 });
 
 console.log(signed.jws); // Compact JWS string
+console.log(signed.iat); // Issued-at timestamp (epoch seconds)
 ```
 
 ### Verifying a Signed SchemaMeta
@@ -118,7 +121,7 @@ import { verifySchemaMeta } from '@owf/eudi-attestation-schema';
 
 const verifier = await ES256.getVerifier(publicKey);
 
-const { header, payload } = await verifySchemaMeta({
+const { header, payload, iat } = await verifySchemaMeta({
   jws: signed.jws,
   verifier,
 });

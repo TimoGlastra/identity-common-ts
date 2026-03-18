@@ -71,6 +71,7 @@ export const SchemaURISchema = z.object({
 
 export const SchemaMetaSchema = z.object({
   id: z.string().optional(),
+  iat: z.number().optional(),
   version: z.string().min(1),
   rulebookURI: z.string().url(),
   rulebookIntegrity: z.string().optional(),
