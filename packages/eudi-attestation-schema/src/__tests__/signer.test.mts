@@ -107,9 +107,7 @@ describe('signSchemaMeta', () => {
       keyId: 'test-key-1',
       signer,
       certificates: [TEST_CERT],
-    })
-
-    console.log(signed.jws)
+    })    
 
     expect(signed.payload).toEqual(meta)
   })
