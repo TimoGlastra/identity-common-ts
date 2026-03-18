@@ -11,6 +11,7 @@ This SDK implements the ETSI TS 119 602 standard for LoTE documents, enabling:
 - **Validate LoTE documents** against ETSI TS 119 602 schema
 
 > **Note**: This package currently supports **JWT encoding only**. CBOR and XML encodings are not yet supported.
+> **Important**: ETSI TS 119 602 does not prescribe how a LoTE should be encoded into a JWT. The JWT signing in this SDK (header structure, payload mapping, content type) is an assumption made by this implementation and may change as the specification evolves.
 
 ## Specification Reference
 
