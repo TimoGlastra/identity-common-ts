@@ -57,7 +57,8 @@ describe('verifySchemaMeta', () => {
 
     const result = await verifySchemaMeta({ jws: signed.jws, verifier })
 
-    expect(result.payload).toEqual(meta)
+    const { iat: _iat, ...payloadWithoutIat } = result.payload
+    expect(payloadWithoutIat).toEqual(meta)
     expect(result.header.alg).toBe('ES256')
     expect(result.header.kid).toBe('test-key-1')
     expect(result.header.typ).toBe('attestation-schema+jwt')
