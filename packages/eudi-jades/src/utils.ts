@@ -44,7 +44,7 @@ export function generateX5c(certs: string | string[]): string[] {
  * @returns Base64url-encoded SHA-256 thumbprint
  */
 export async function generateX5tS256(certDer: string): Promise<string> {
-  const certBytes = base64ToUint8Array(certDer)
+  const certBytes = base64ToUint8Array(certDer) as BufferSource
   const hashBuffer = await globalThis.crypto.subtle.digest('SHA-256', certBytes)
   return uint8ArrayToBase64Url(new Uint8Array(hashBuffer))
 }
@@ -64,7 +64,7 @@ export async function generateX5tO(certDer: string, algorithm: 'SHA-384' | 'SHA-
     'SHA-512': 'S512',
   } as const
 
-  const certBytes = base64ToUint8Array(certDer)
+  const certBytes = base64ToUint8Array(certDer) as BufferSource
   const hashBuffer = await globalThis.crypto.subtle.digest(algorithm, certBytes)
 
   return {
