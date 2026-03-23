@@ -10,6 +10,7 @@
  *   node scripts/create-package.mjs eudi-lote --eudi
  */
 
+import { access } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
