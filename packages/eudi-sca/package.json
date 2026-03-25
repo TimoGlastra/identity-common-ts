@@ -1,0 +1,39 @@
+{
+  "name": "@owf/eudi-sca",
+  "version": "0.0.0",
+  "description": "Tools and utilities for EUDI Strong Customer Authentication per TS12",
+  "files": [
+    "dist"
+  ],
+  "license": "Apache-2.0",
+  "exports": "./src/index.ts",
+  "homepage": "https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/eudi-sca",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openwallet-foundation-labs/identity-common-ts",
+    "directory": "packages/eudi-sca"
+  },
+  "publishConfig": {
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "keywords": [
+    "sca",
+    "eudi",
+    "TS12",
+    "wallet"
+  ],
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --dts --sourcemap"
+  },
+  "dependencies": {
+    "@owf/identity-common": "workspace:",
+    "@openid4vc/openid4vci": "^0.4.6",
+    "@owf/mdoc": "0.6.0-alpha-20260225221529",
+    "zod": "^4.3.6"
+  }
+}
