@@ -61,7 +61,7 @@ Tools specific to the [European Digital Identity (EUDI) Wallet](https://ec.europ
 |---------|-------------|--------|
 | [`@owf/eudi-lote`](./packages/eudi-lote) | ETSI TS 119 602 Lists of Trusted Entities (LoTE) | ✅ Available |
 | `@owf/eudi-certificates` | Registration and access certificate verification | 📋 Planned |
-| `@owf/eudi-payment` | ARF TS 12 Electronic Payment SCA extensions | 📋 Planned |
+| `@owf/eudi-sca` | TS12 Strong Customer Authentication Payments according to the latest to-be-added ARF |  In Progess |
 
 > **Note**: While the EUDI Wallet is built on open standards (OpenID4VC, SD-JWT VC), it requires specific extensions for Trust, Payments, and document signing that are better suited in dedicated packages.
 

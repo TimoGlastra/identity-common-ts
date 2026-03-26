@@ -33,7 +33,7 @@
   "dependencies": {
     "@owf/identity-common": "workspace:",
     "@openid4vc/openid4vci": "^0.4.6",
-    "@owf/mdoc": "0.6.0-alpha-20260225221529",
+    "@owf/mdoc": "^0.6.0",
     "zod": "^4.3.6"
   }
 }
