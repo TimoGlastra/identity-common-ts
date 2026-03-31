@@ -92,7 +92,7 @@ export const ServiceDigitalIdentitySchema = z
 
 export const ServiceSupplyPointSchema = z.object({
   ServiceType: z.string(),
-  uriValue: z.string(),
+  uriValue: z.url(),
 })
 
 export const ServiceInformationSchema = z.object({
@@ -177,7 +177,7 @@ export const ListAndSchemeInformationSchema = z.object({
   PointersToOtherLoTE: z.array(OtherLoTEPointerSchema).optional(),
   ListIssueDateTime: z.iso.datetime(),
   NextUpdate: z.iso.datetime(),
-  DistributionPoints: z.array(z.string()).optional(),
+  DistributionPoints: z.array(z.url()).optional(),
   SchemeExtensions: z.array(z.unknown()).optional(),
 })
 

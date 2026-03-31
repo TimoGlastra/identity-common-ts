@@ -125,11 +125,13 @@ describe('LoTE Validator', () => {
     it('should validate optional URI fields', () => {
       const lote = createMinimalValidLoTE()
       lote.LoTE.ListAndSchemeInformation.LoTEType = 'not-a-uri'
+      lote.LoTE.ListAndSchemeInformation.DistributionPoints = ['not-a-uri']
 
       const result = validateLoTE(lote)
 
       expect(result.valid).toBe(false)
       expect(result.errors.some((e) => e.path === 'LoTE.ListAndSchemeInformation.LoTEType')).toBe(true)
+      expect(result.errors.some((e) => e.path === 'LoTE.ListAndSchemeInformation.DistributionPoints.0')).toBe(true)
     })
 
     it('should validate SchemeTerritory is 2-character code', () => {
@@ -232,6 +234,58 @@ describe('LoTE Validator', () => {
       const result = validateLoTE(lote)
 
       expect(result.valid).toBe(true)
+    })
+
+    it('should validate optional URI fields', () => {
+      const lote = createMinimalValidLoTE()
+      lote.LoTE.TrustedEntitiesList = [
+        {
+          TrustedEntityInformation: {
+            TEName: [{ lang: 'en', value: 'Test Entity' }],
+            TEAddress: {
+              TEPostalAddress: [
+                {
+                  lang: 'en',
+                  StreetAddress: '123 St',
+                  Locality: 'City',
+                  PostalCode: '12345',
+                  Country: 'DE',
+                },
+              ],
+              TEElectronicAddress: [{ lang: 'en', uriValue: 'mailto:test@example.com' }],
+            },
+          },
+          TrustedEntityServices: [
+            {
+              ServiceInformation: {
+                ServiceName: [{ lang: 'en', value: 'Test Service' }],
+                ServiceDigitalIdentity: {
+                  PublicKeyValues: [{ kty: 'EC', crv: 'P-256' }],
+                },
+                ServiceSupplyPoints: [
+                  {
+                    ServiceType: 'https://example.com/service-type',
+                    uriValue: 'not-a-uri',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ]
+
+      const result = validateLoTE(lote)
+
+      console.log(result)
+
+      expect(result.valid).toBe(false)
+      expect(
+        result.errors.some(
+          (e) =>
+            e.path ===
+            'LoTE.TrustedEntitiesList.0.TrustedEntityServices.0.ServiceInformation.ServiceSupplyPoints.0.uriValue'
+        )
+      ).toBe(true)
     })
 
     it('should require at least one service per entity', () => {
