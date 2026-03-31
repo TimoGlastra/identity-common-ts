@@ -20,7 +20,7 @@ export const LocalizedStringSchema = z.object({
 
 export const LocalizedURISchema = z.object({
   lang: z.string().min(1),
-  uriValue: z.string().url(),
+  uriValue: z.url(),
 })
 
 // ============================================================================
@@ -61,14 +61,12 @@ export const X509CertificateRefSchema = PkiObjectSchema.extend({
   specRef: z.literal('RFC5280').optional(),
 })
 
-export const JWKPublicKeySchema = z
-  .object({
-    kty: z.enum(['RSA', 'EC', 'OKP']),
-    kid: z.string().optional(),
-    use: z.enum(['sig', 'enc']).optional(),
-    alg: z.string().optional(),
-  })
-  .passthrough()
+export const JWKPublicKeySchema = z.looseObject({
+  kty: z.enum(['RSA', 'EC', 'OKP']),
+  kid: z.string().optional(),
+  use: z.enum(['sig', 'enc']).optional(),
+  alg: z.string().optional(),
+})
 
 export const ServiceDigitalIdentitySchema = z
   .object({
@@ -100,9 +98,9 @@ export const ServiceSupplyPointSchema = z.object({
 export const ServiceInformationSchema = z.object({
   ServiceName: z.array(LocalizedStringSchema).min(1),
   ServiceDigitalIdentity: ServiceDigitalIdentitySchema,
-  ServiceTypeIdentifier: z.string().url().optional(),
-  ServiceStatus: z.string().url().optional(),
-  StatusStartingTime: z.string().datetime().optional(),
+  ServiceTypeIdentifier: z.url().optional(),
+  ServiceStatus: z.url().optional(),
+  StatusStartingTime: z.iso.datetime().optional(),
   SchemeServiceDefinitionURI: z.array(LocalizedURISchema).optional(),
   ServiceSupplyPoints: z.array(ServiceSupplyPointSchema).optional(),
   ServiceDefinitionURI: z.array(LocalizedURISchema).optional(),
@@ -112,9 +110,9 @@ export const ServiceInformationSchema = z.object({
 export const ServiceHistoryInstanceSchema = z.object({
   ServiceName: z.array(LocalizedStringSchema).min(1),
   ServiceDigitalIdentity: ServiceDigitalIdentitySchema,
-  ServiceStatus: z.string().url(),
-  StatusStartingTime: z.string().datetime(),
-  ServiceTypeIdentifier: z.string().url().optional(),
+  ServiceStatus: z.url(),
+  StatusStartingTime: z.iso.datetime(),
+  ServiceTypeIdentifier: z.url().optional(),
   ServiceInformationExtensions: z.array(z.unknown()).optional(),
 })
 
@@ -150,7 +148,7 @@ export const PolicyOrLegalNoticeSchema = z.object({
 })
 
 export const LoTEQualifierSchema = z.object({
-  LoTEType: z.string().url(),
+  LoTEType: z.url(),
   SchemeOperatorName: z.array(LocalizedStringSchema).min(1),
   SchemeTypeCommunityRules: z.array(LocalizedURISchema).optional(),
   SchemeTerritory: z.string().length(2).optional(),
@@ -158,7 +156,7 @@ export const LoTEQualifierSchema = z.object({
 })
 
 export const OtherLoTEPointerSchema = z.object({
-  LoTELocation: z.string().url(),
+  LoTELocation: z.url(),
   ServiceDigitalIdentities: z.array(ServiceDigitalIdentitySchema).min(1),
   LoTEQualifiers: z.array(LoTEQualifierSchema).min(1),
 })
@@ -166,19 +164,19 @@ export const OtherLoTEPointerSchema = z.object({
 export const ListAndSchemeInformationSchema = z.object({
   LoTEVersionIdentifier: z.number().int(),
   LoTESequenceNumber: z.number().int(),
-  LoTEType: z.string().url().optional(),
+  LoTEType: z.url().optional(),
   SchemeOperatorName: z.array(LocalizedStringSchema).min(1),
   SchemeOperatorAddress: SchemeOperatorAddressSchema.optional(),
   SchemeName: z.array(LocalizedStringSchema).optional(),
   SchemeInformationURI: z.array(LocalizedURISchema).optional(),
-  StatusDeterminationApproach: z.string().url().optional(),
+  StatusDeterminationApproach: z.url().optional(),
   SchemeTypeCommunityRules: z.array(LocalizedURISchema).optional(),
   SchemeTerritory: z.string().length(2).optional(),
   PolicyOrLegalNotice: z.array(PolicyOrLegalNoticeSchema).optional(),
   HistoricalInformationPeriod: z.number().optional(),
   PointersToOtherLoTE: z.array(OtherLoTEPointerSchema).optional(),
-  ListIssueDateTime: z.string().datetime(),
-  NextUpdate: z.string().datetime(),
+  ListIssueDateTime: z.iso.datetime(),
+  NextUpdate: z.iso.datetime(),
   DistributionPoints: z.array(z.string()).optional(),
   SchemeExtensions: z.array(z.unknown()).optional(),
 })
