@@ -1,6 +1,6 @@
 import { ES256, parseCertificateChain } from '@owf/crypto'
 import { describe, expect, it } from 'vitest'
-import { ALGORITHMS, CommitmentOIDs, JAdESProfile } from '../constants'
+import { CommitmentOIDs, JAdESProfile } from '../constants'
 import {
   decode,
   generateX5c,
@@ -48,13 +48,6 @@ const TEST_PUBLIC_KEY = {
 }
 
 describe('JAdES Constants', () => {
-  it('should export algorithm definitions', () => {
-    expect(ALGORITHMS.ES256).toBeDefined()
-    expect(ALGORITHMS.ES256.hash).toBe('SHA-256')
-    expect(ALGORITHMS.ES256.family).toBe('ECDSA')
-    expect(ALGORITHMS.ES256.namedCurve).toBe('P-256')
-  })
-
   it('should export commitment OIDs', () => {
     expect(CommitmentOIDs.proofOfOrigin).toBe('1.2.840.113549.1.9.16.6.1')
     expect(CommitmentOIDs.proofOfCreation).toBe('1.2.840.113549.1.9.16.6.6')

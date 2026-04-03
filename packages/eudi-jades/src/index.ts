@@ -14,7 +14,7 @@
  */
 
 // Constants
-export { ALGORITHMS, CommitmentOIDs, CRITICAL_PARAMETERS, DETACHED_MECHANISM_IDS, JAdESProfile } from './constants'
+export { CommitmentOIDs, CRITICAL_PARAMETERS, DETACHED_MECHANISM_IDS, JAdESProfile } from './constants'
 // Exception
 export { JAdESException } from './jades-exception'
 // Zod Schemas

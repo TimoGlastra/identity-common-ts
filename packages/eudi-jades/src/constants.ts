@@ -5,26 +5,6 @@
  */
 
 /**
- * Supported signature algorithms with their hash algorithms.
- */
-export const ALGORITHMS = {
-  // RSA PKCS#1 v1.5
-  RS256: { hash: 'SHA-256', family: 'RSA' },
-  RS384: { hash: 'SHA-384', family: 'RSA' },
-  RS512: { hash: 'SHA-512', family: 'RSA' },
-
-  // RSA-PSS
-  PS256: { hash: 'SHA-256', family: 'RSA-PSS' },
-  PS384: { hash: 'SHA-384', family: 'RSA-PSS' },
-  PS512: { hash: 'SHA-512', family: 'RSA-PSS' },
-
-  // ECDSA
-  ES256: { hash: 'SHA-256', family: 'ECDSA', namedCurve: 'P-256' },
-  ES384: { hash: 'SHA-384', family: 'ECDSA', namedCurve: 'P-384' },
-  ES512: { hash: 'SHA-512', family: 'ECDSA', namedCurve: 'P-521' },
-} as const
-
-/**
  * Commitment type OIDs as per RFC 5035.
  */
 export enum CommitmentOIDs {
