@@ -90,7 +90,12 @@ export type {
   // Digital identity
   X509CertificateRef,
 } from './types'
-
 // Validator
-export type { LoTEProfile, ValidationError, ValidationResult } from './validator'
-export { assertValidLoTE, validateLoTE, validateLoTEProfile } from './validator'
+export {
+  assertValidLoTE,
+  LoTEProfile,
+  ValidationError,
+  ValidationResult,
+  validateLoTE,
+  validateLoTEProfile,
+} from './validator'
