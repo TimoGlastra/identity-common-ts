@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 import { ALGORITHMS, CommitmentOIDs, JAdESProfile } from '../constants'
 import {
   decode,
-  encodeJSON,
   generateX5c,
   generateX5tS256,
   getSigningTime,
@@ -174,13 +173,6 @@ describe('JAdES Utils', () => {
     const thumbprint = generateX5tS256(certs[0])
     expect(thumbprint).toBeDefined()
     expect(thumbprint).toMatch(/^[A-Za-z0-9_-]+$/) // base64url
-  })
-
-  it('should encode JSON to base64url', () => {
-    const obj = { hello: 'world' }
-    const encoded = encodeJSON(obj)
-    expect(encoded).toBeDefined()
-    expect(encoded).toMatch(/^[A-Za-z0-9_-]+$/)
   })
 
   it('should get signing time in ISO format', () => {

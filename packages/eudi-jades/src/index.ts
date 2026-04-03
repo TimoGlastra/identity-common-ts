@@ -63,14 +63,11 @@ export type {
 } from './types'
 // Utility functions
 export {
-  decodeJSON,
-  encodeJSON,
-  generateKid,
   generateSigX5ts,
   generateX5c,
   generateX5tO,
   generateX5tS256,
-  getSigningTime,  
+  getSigningTime,
   validateCertificateHeaders,
 } from './utils'
 export type { VerifyResult } from './verifier'

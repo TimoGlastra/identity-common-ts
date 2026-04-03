@@ -5,7 +5,7 @@
  */
 
 import { parseCertificateChain, sha256, sha384, sha512 } from '@owf/crypto'
-import { base64urlDecode, base64urlEncode } from '@owf/identity-common'
+import { base64urlEncode } from '@owf/identity-common'
 import { JAdESException } from './jades-exception'
 import type { X5tO } from './types'
 
@@ -82,40 +82,14 @@ export function generateSigX5ts(certsDer: string[], algorithm: 'SHA-384' | 'SHA-
 }
 
 /**
- * Generate a JAdES-compliant kid from X.509 certificate.
- *
- * According to ETSI TS 119 182-1 Section 5.1.4, the kid should be
- * the base64 encoding of DER-encoded IssuerSerial sequence.
- *
- * This implementation generates a SHA-256 thumbprint of the certificate
- * as a simpler approach that uniquely identifies the certificate.
- *
- * @param certDer - Base64-encoded DER certificate
- * @returns Base64url-encoded key identifier
- */
-export function generateKid(certDer: string): string {
-  // Use SHA-256 thumbprint as kid for simplicity
-  return generateX5tS256(certDer)
-}
-
-/**
  * Encode an object as a base64url JSON string.
  *
  * @param obj - Object to encode
  * @returns Base64url-encoded JSON string
+ * @internal
  */
 export function encodeJSON(obj: object): string {
   return base64urlEncode(JSON.stringify(obj))
-}
-
-/**
- * Decode a base64url JSON string to an object.
- *
- * @param encoded - Base64url-encoded JSON string
- * @returns Decoded object
- */
-export function decodeJSON<T = unknown>(encoded: string): T {
-  return JSON.parse(base64urlDecode(encoded)) as T
 }
 
 /**

@@ -122,7 +122,6 @@ import {
   generateX5c,
   generateX5tS256,
   generateX5tO,
-  generateKid,
   getSigningTime,
 } from '@owf/eudi-jades'
 import { parseCertificateChain } from '@owf/crypto'
@@ -138,9 +137,6 @@ const thumbprint = generateX5tS256(certDer)
 
 // Generate thumbprint with other algorithm
 const x5tO = generateX5tO(certDer, 'SHA-512')
-
-// Generate key ID from certificate
-const kid = generateKid(certDer)
 
 // Get current signing time
 const sigT = getSigningTime() // "2025-03-23T14:30:00Z"
@@ -187,7 +183,6 @@ This library is **platform agnostic** and works in:
 - `generateX5c(certs)` - Generate x5c header
 - `generateX5tS256(cert)` - Generate SHA-256 thumbprint
 - `generateX5tO(cert, alg)` - Generate thumbprint with algorithm
-- `generateKid(cert)` - Generate key ID
 - `getSigningTime()` - Get current ISO timestamp
 
 ## Contributing
