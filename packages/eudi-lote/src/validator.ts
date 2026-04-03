@@ -4,7 +4,16 @@
  * Runtime validation for ETSI TS 119 602 LoTE documents using Zod schemas.
  */
 
+import z from 'zod'
 import { LoTEException } from './lote-exception'
+import {
+  EUPIDProvidersListSchema,
+  EUPubEAAProvidersListSchema,
+  EUWalletProvidersListSchema,
+  EUWRPACProvidersListSchema,
+  EUWRPRCProvidersListSchema,
+  mDLProvidersListSchema,
+} from './profiles'
 import { LoTEDocumentSchema } from './schemas'
 import type { LoTEDocument } from './types'
 
@@ -68,5 +77,58 @@ export function assertValidLoTE(loteDocument: unknown): asserts loteDocument is 
   if (!result.valid) {
     const errorMessages = result.errors.map((e) => `${e.path}: ${e.message}`).join('\n')
     throw new LoTEException(`Invalid LoTE document:\n${errorMessages}`)
+  }
+}
+
+/**
+ * Supported LoTE profiles for validation
+ */
+export enum LoTEProfile {
+  EUPIDProvidersList = 'EUPIDProvidersList',
+  EUWalletProvidersList = 'EUWalletProvidersList',
+  EUWRPACProvidersList = 'EUWRPACProvidersList',
+  EUWRPRCProvidersList = 'EUWRPRCProvidersList',
+  EUPubEAAProvidersList = 'EUPubEAAProvidersList',
+  mDLProvidersList = 'mDLProvidersList',
+}
+
+const profileToSchemaMap: Record<LoTEProfile, z.ZodType> = {
+  [LoTEProfile.EUPIDProvidersList]: EUPIDProvidersListSchema,
+  [LoTEProfile.EUWalletProvidersList]: EUWalletProvidersListSchema,
+  [LoTEProfile.EUWRPACProvidersList]: EUWRPACProvidersListSchema,
+  [LoTEProfile.EUWRPRCProvidersList]: EUWRPRCProvidersListSchema,
+  [LoTEProfile.EUPubEAAProvidersList]: EUPubEAAProvidersListSchema,
+  [LoTEProfile.mDLProvidersList]: mDLProvidersListSchema,
+}
+
+/**
+ * Validate a LoTE document against one or more given profiles. Validation
+ * succeeds if the document matches one of the specified profiles
+ *
+ * @param loteDocument - The LoTE document to validate
+ * @param profile - The profile(s) to validate against
+ * @returns Validation result with errors if invalid
+ */
+export function validateLoTEProfile(loteDocument: unknown, profile: LoTEProfile | LoTEProfile[]): ValidationResult {
+  const profiles = Array.isArray(profile) ? profile : [profile]
+  const schema = z.union(profiles.map((p) => profileToSchemaMap[p]))
+  const result = schema.safeParse(loteDocument)
+
+  if (result.success) {
+    return { valid: true, errors: [] }
+  }
+
+  return {
+    valid: false,
+    errors: [
+      {
+        path: 'LoTEType',
+        message: `Document does not match any of the specified profiles: ${profiles.join(', ')}`,
+      },
+      ...result.error.issues.map((issue) => ({
+        path: issue.path.join('.'),
+        message: issue.message,
+      })),
+    ],
   }
 }
