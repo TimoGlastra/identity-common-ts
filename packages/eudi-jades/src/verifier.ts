@@ -6,7 +6,7 @@
 
 import { base64urlDecode } from '@owf/identity-common'
 import { JAdESException } from './jades-exception'
-import { GeneralJWSSchema, ProtectedHeaderSchema } from './schemas'
+import { GeneralJWSSchema, ProtectedHeaderSchema, UnprotectedHeaderSchema } from './schemas'
 import type { GeneralJWS, ProtectedHeaderParams, UnprotectedHeaderParams } from './types'
 
 /**
@@ -87,13 +87,15 @@ export async function verifyGeneral<T = unknown>(
     throw new JAdESException(`Invalid General JWS structure: ${errors}`)
   }
 
-  const sig = generalJws.signatures[signatureIndex]
+  // Use validated data
+  const validatedJws = jwsResult.data
+  const sig = validatedJws.signatures[signatureIndex]
 
   if (!sig) {
     throw new JAdESException(`Signature at index ${signatureIndex} not found`)
   }
 
-  const signingInput = `${sig.protected}.${generalJws.payload}`
+  const signingInput = `${sig.protected}.${validatedJws.payload}`
   const valid = await verifier(signingInput, sig.signature)
 
   if (!valid) {
@@ -109,12 +111,12 @@ export async function verifyGeneral<T = unknown>(
   }
   const header = headerResult.data as ProtectedHeaderParams
 
-  const payload = generalJws.payload ? (JSON.parse(base64urlDecode(generalJws.payload)) as T) : ({} as T)
+  const payload = validatedJws.payload ? (JSON.parse(base64urlDecode(validatedJws.payload)) as T) : ({} as T)
 
   return {
     header,
     payload,
-    unprotectedHeader: sig.header,
+    unprotectedHeader: sig.header as UnprotectedHeaderParams | undefined,
     valid,
   }
 }
@@ -166,10 +168,11 @@ export function decode<T = unknown>(
       const parsed = JSON.parse(jws) as GeneralJWS
       if (parsed.signatures && Array.isArray(parsed.signatures)) {
         const sig = parsed.signatures[0]
+        const unprotectedResult = sig.header ? UnprotectedHeaderSchema.safeParse(sig.header) : undefined
         return {
           header: JSON.parse(base64urlDecode(sig.protected)) as ProtectedHeaderParams,
           payload: parsed.payload ? (JSON.parse(base64urlDecode(parsed.payload)) as T) : ({} as T),
-          unprotectedHeader: sig.header,
+          unprotectedHeader: unprotectedResult?.success ? (unprotectedResult.data as UnprotectedHeaderParams) : undefined,
         }
       }
     } catch {
@@ -188,9 +191,10 @@ export function decode<T = unknown>(
   }
 
   const sig = jws.signatures[0]
+  const unprotectedResult = sig.header ? UnprotectedHeaderSchema.safeParse(sig.header) : undefined
   return {
     header: JSON.parse(base64urlDecode(sig.protected)) as ProtectedHeaderParams,
     payload: jws.payload ? (JSON.parse(base64urlDecode(jws.payload)) as T) : ({} as T),
-    unprotectedHeader: sig.header,
+    unprotectedHeader: unprotectedResult?.success ? (unprotectedResult.data as UnprotectedHeaderParams) : undefined,
   }
 }
