@@ -7,6 +7,7 @@
 import z from 'zod'
 import { LoTEException } from './lote-exception'
 import {
+  EUEAAProvidersListSchema,
   EUPIDProvidersListSchema,
   EUPubEAAProvidersListSchema,
   EUWalletProvidersListSchema,
@@ -88,6 +89,7 @@ export enum LoTEProfile {
   EUWalletProvidersList = 'EUWalletProvidersList',
   EUWRPACProvidersList = 'EUWRPACProvidersList',
   EUWRPRCProvidersList = 'EUWRPRCProvidersList',
+  EUEAAProvidersList = 'EUEAAProvidersList',
   EUPubEAAProvidersList = 'EUPubEAAProvidersList',
   mDLProvidersList = 'mDLProvidersList',
 }
@@ -97,6 +99,7 @@ const profileToSchemaMap: Record<LoTEProfile, z.ZodType> = {
   [LoTEProfile.EUWalletProvidersList]: EUWalletProvidersListSchema,
   [LoTEProfile.EUWRPACProvidersList]: EUWRPACProvidersListSchema,
   [LoTEProfile.EUWRPRCProvidersList]: EUWRPRCProvidersListSchema,
+  [LoTEProfile.EUEAAProvidersList]: EUEAAProvidersListSchema,
   [LoTEProfile.EUPubEAAProvidersList]: EUPubEAAProvidersListSchema,
   [LoTEProfile.mDLProvidersList]: mDLProvidersListSchema,
 }

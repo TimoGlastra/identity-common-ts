@@ -274,6 +274,25 @@ export const EUWRPRCProvidersListSchema = LoTEDocumentSchema.superRefine(
   })
 )
 
+export const EUEAAProvidersListSchema = LoTEDocumentSchema.superRefine(
+  listAndSchemeInformationRefinement({
+    loTEType: 'http://uri.etsi.org/19602/LoTEType/EUEAAProvidersList',
+    loTEVersionIdentifier: 1,
+    statusDeterminationApproach: 'http://uri.etsi.org/19602/EAAProvidersList/StatusDetn/EU"',
+    schemeTerritory: 'EU',
+    schemeTypeCommunityRulesUri: 'http://uri.etsi.org/19602/EAAProvidersList/schemerules/EU',
+    requireNoPointersToOtherLoTE: true,
+  })
+).superRefine(
+  trustedEntitiesListRefinement({
+    allowedServiceTypeIdentifiers: [
+      'http://uri.etsi.org/19602/SvcType/EAA/Issuance',
+      'http://uri.etsi.org/19602/SvcType/EAA/Revocation',
+    ],
+    informationUriPrefix: 'http://uri.etsi.org/19602/ListOfTrustedEntities/EAAProvider/',
+  })
+)
+
 // ETSI TS 119 602 H
 export const EUPubEAAProvidersListSchema = LoTEDocumentSchema.superRefine(
   listAndSchemeInformationRefinement({
