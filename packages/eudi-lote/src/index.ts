@@ -9,6 +9,16 @@ export {
 } from './builders'
 // Exception
 export { LoTEException } from './lote-exception'
+// Profiles
+export {
+  EUEAAProvidersListSchema,
+  EUPIDProvidersListSchema,
+  EUPubEAAProvidersListSchema,
+  EUWalletProvidersListSchema,
+  EUWRPACProvidersListSchema,
+  EUWRPRCProvidersListSchema,
+  mDLProvidersListSchema,
+} from './profiles'
 // Schemas
 export {
   JWKPublicKeySchema,
@@ -82,5 +92,5 @@ export type {
 } from './types'
 
 // Validator
-export type { ValidationError, ValidationResult } from './validator'
-export { assertValidLoTE, validateLoTE } from './validator'
+export type { LoTEProfile, ValidationError, ValidationResult } from './validator'
+export { assertValidLoTE, validateLoTE, validateLoTEProfile } from './validator'
