@@ -6,13 +6,13 @@
  *
  * @example
  * ```typescript
- * import { Token, parseCerts, generateX5c } from '@owf/eudi-jades'
- * import { ES256 } from '@owf/crypto'
+ * import { Token, generateX5c } from '@owf/eudi-jades'
+ * import { ES256, parseCertificateChain } from '@owf/crypto'
  *
  * const payload = { hello: 'world' }
  * const token = new Token(payload)
  *
- * const certs = parseCerts(pemCertificate)
+ * const certs = parseCertificateChain(pemCertificate)
  * token.setProtectedHeader({
  *   alg: 'ES256',
  *   x5c: generateX5c(certs),

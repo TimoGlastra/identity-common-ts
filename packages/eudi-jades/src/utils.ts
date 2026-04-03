@@ -4,20 +4,10 @@
  * Helper functions for certificate handling and header generation.
  */
 
-import { parseCertificateChain } from '@owf/crypto'
+import { parseCertificateChain, sha256, sha384, sha512 } from '@owf/crypto'
 import { base64urlDecode, base64urlEncode } from '@owf/identity-common'
 import { JAdESException } from './jades-exception'
 import type { X5tO } from './types'
-
-/**
- * Parse PEM-encoded certificate chain and return base64 DER strings.
- *
- * @param pem - One or more PEM-encoded certificates
- * @returns Array of base64-encoded DER certificate strings
- */
-export function parseCerts(pem: string): string[] {
-  return parseCertificateChain(pem)
-}
 
 /**
  * Generate x5c header value from PEM certificates.
@@ -43,10 +33,10 @@ export function generateX5c(certs: string | string[]): string[] {
  * @param certDer - Base64-encoded DER certificate
  * @returns Base64url-encoded SHA-256 thumbprint
  */
-export async function generateX5tS256(certDer: string): Promise<string> {
-  const certBytes = base64ToUint8Array(certDer) as BufferSource
-  const hashBuffer = await globalThis.crypto.subtle.digest('SHA-256', certBytes)
-  return uint8ArrayToBase64Url(new Uint8Array(hashBuffer))
+export function generateX5tS256(certDer: string): string {
+  const certBytes = base64ToUint8Array(certDer)
+  const hash = sha256(certBytes.buffer as ArrayBuffer)
+  return uint8ArrayToBase64Url(hash)
 }
 
 /**
@@ -58,18 +48,19 @@ export async function generateX5tS256(certDer: string): Promise<string> {
  * @param algorithm - Hash algorithm ('SHA-384' or 'SHA-512')
  * @returns X5tO object with algorithm identifier and digest value
  */
-export async function generateX5tO(certDer: string, algorithm: 'SHA-384' | 'SHA-512' = 'SHA-512'): Promise<X5tO> {
+export function generateX5tO(certDer: string, algorithm: 'SHA-384' | 'SHA-512' = 'SHA-512'): X5tO {
   const algMap = {
     'SHA-384': 'S384',
     'SHA-512': 'S512',
   } as const
 
-  const certBytes = base64ToUint8Array(certDer) as BufferSource
-  const hashBuffer = await globalThis.crypto.subtle.digest(algorithm, certBytes)
+  const hashFn = algorithm === 'SHA-384' ? sha384 : sha512
+  const certBytes = base64ToUint8Array(certDer)
+  const hash = hashFn(certBytes.buffer as ArrayBuffer)
 
   return {
     digAlg: algMap[algorithm],
-    digVal: uint8ArrayToBase64Url(new Uint8Array(hashBuffer)),
+    digVal: uint8ArrayToBase64Url(hash),
   }
 }
 
@@ -82,15 +73,12 @@ export async function generateX5tO(certDer: string, algorithm: 'SHA-384' | 'SHA-
  * @param algorithm - Hash algorithm ('SHA-384' or 'SHA-512')
  * @returns Array of X5tO objects
  */
-export async function generateSigX5ts(
-  certsDer: string[],
-  algorithm: 'SHA-384' | 'SHA-512' = 'SHA-512'
-): Promise<X5tO[]> {
+export function generateSigX5ts(certsDer: string[], algorithm: 'SHA-384' | 'SHA-512' = 'SHA-512'): X5tO[] {
   if (certsDer.length < 2) {
     throw new JAdESException('sigX5ts requires at least 2 certificates')
   }
 
-  return Promise.all(certsDer.map((cert) => generateX5tO(cert, algorithm)))
+  return certsDer.map((cert) => generateX5tO(cert, algorithm))
 }
 
 /**
@@ -105,7 +93,7 @@ export async function generateSigX5ts(
  * @param certDer - Base64-encoded DER certificate
  * @returns Base64url-encoded key identifier
  */
-export async function generateKid(certDer: string): Promise<string> {
+export function generateKid(certDer: string): string {
   // Use SHA-256 thumbprint as kid for simplicity
   return generateX5tS256(certDer)
 }

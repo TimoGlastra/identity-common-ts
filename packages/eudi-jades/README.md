@@ -31,8 +31,8 @@ yarn add @owf/eudi-jades
 ### Basic Signature (B-B Profile)
 
 ```typescript
-import { Token, parseCerts } from '@owf/eudi-jades'
-import { ES256 } from '@owf/crypto'
+import { Token } from '@owf/eudi-jades'
+import { ES256, parseCertificateChain } from '@owf/crypto'
 
 // Create payload
 const payload = {
@@ -46,7 +46,7 @@ const payload = {
 const token = new Token(payload)
 
 // Set protected header with certificate
-const certs = parseCerts(pemCertificate)
+const certs = parseCertificateChain(pemCertificate)
 token
   .setProtectedHeader({ alg: 'ES256' })
   .setX5c(certs)
@@ -69,10 +69,11 @@ const generalJws = token.toJSON()
 ### Signature with Timestamp (B-T Profile)
 
 ```typescript
-import { Token, parseCerts } from '@owf/eudi-jades'
+import { Token } from '@owf/eudi-jades'
+import { parseCertificateChain } from '@owf/crypto'
 
 const token = new Token(payload)
-const certs = parseCerts(pemCertificate)
+const certs = parseCertificateChain(pemCertificate)
 
 token
   .setProtectedHeader({ alg: 'ES256' })
@@ -118,28 +119,28 @@ const decoded = decode(compactJws)
 
 ```typescript
 import {
-  parseCerts,
   generateX5c,
   generateX5tS256,
   generateX5tO,
   generateKid,
   getSigningTime,
 } from '@owf/eudi-jades'
+import { parseCertificateChain } from '@owf/crypto'
 
 // Parse PEM certificate chain
-const certs = parseCerts(pemString)
+const certs = parseCertificateChain(pemString)
 
 // Generate x5c header value
 const x5c = generateX5c(pemString)
 
 // Generate SHA-256 thumbprint
-const thumbprint = await generateX5tS256(certDer)
+const thumbprint = generateX5tS256(certDer)
 
 // Generate thumbprint with other algorithm
-const x5tO = await generateX5tO(certDer, 'SHA-512')
+const x5tO = generateX5tO(certDer, 'SHA-512')
 
 // Generate key ID from certificate
-const kid = await generateKid(certDer)
+const kid = generateKid(certDer)
 
 // Get current signing time
 const sigT = getSigningTime() // "2025-03-23T14:30:00Z"
@@ -183,7 +184,6 @@ This library is **platform agnostic** and works in:
 
 ### Utilities
 
-- `parseCerts(pem)` - Parse PEM certificates
 - `generateX5c(certs)` - Generate x5c header
 - `generateX5tS256(cert)` - Generate SHA-256 thumbprint
 - `generateX5tO(cert, alg)` - Generate thumbprint with algorithm

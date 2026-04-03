@@ -1,4 +1,4 @@
-import { ES256 } from '@owf/crypto'
+import { ES256, parseCertificateChain } from '@owf/crypto'
 import { describe, expect, it } from 'vitest'
 import { ALGORITHMS, CommitmentOIDs, JAdESProfile } from '../constants'
 import {
@@ -7,7 +7,6 @@ import {
   generateX5c,
   generateX5tS256,
   getSigningTime,
-  parseCerts,
   type SignAlg,
   verify,
   verifyCompact,
@@ -159,7 +158,7 @@ describe('JAdES Zod Schemas', () => {
 
 describe('JAdES Utils', () => {
   it('should parse PEM certificates', () => {
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
     expect(certs).toHaveLength(1)
     expect(certs[0]).toMatch(/^[A-Za-z0-9+/=]+$/)
   })
@@ -170,9 +169,9 @@ describe('JAdES Utils', () => {
     expect(x5c[0]).toMatch(/^[A-Za-z0-9+/=]+$/)
   })
 
-  it('should generate x5t#S256 thumbprint', async () => {
-    const certs = parseCerts(TEST_CERT)
-    const thumbprint = await generateX5tS256(certs[0])
+  it('should generate x5t#S256 thumbprint', () => {
+    const certs = parseCertificateChain(TEST_CERT)
+    const thumbprint = generateX5tS256(certs[0])
     expect(thumbprint).toBeDefined()
     expect(thumbprint).toMatch(/^[A-Za-z0-9_-]+$/) // base64url
   })
@@ -199,7 +198,7 @@ describe('JAdES Token', () => {
 
   it('should set protected header', () => {
     const token = new Token({ data: 'test' })
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -218,7 +217,7 @@ describe('JAdES Token', () => {
 
   it('should throw when signing without alg', async () => {
     const token = new Token({ data: 'test' })
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
     token.setX5c(certs)
 
     const signer = await ES256.getSigner(TEST_PRIVATE_KEY)
@@ -227,7 +226,7 @@ describe('JAdES Token', () => {
 
   it('should set certificate chain via setX5c', () => {
     const token = new Token({ data: 'test' })
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
     token.setX5c(certs)
     expect(token.getProtectedHeader().x5c).toEqual(certs)
   })
@@ -276,7 +275,7 @@ describe('JAdES Token', () => {
   it('should sign and produce compact JWS', async () => {
     const payload = { hello: 'world' }
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -293,7 +292,7 @@ describe('JAdES Token', () => {
   it('should sign and produce General JWS JSON', async () => {
     const payload = { hello: 'world' }
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -313,7 +312,7 @@ describe('JAdES Token', () => {
   it('should produce flattened JWS JSON', async () => {
     const payload = { hello: 'world' }
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -341,7 +340,7 @@ describe('JAdES Verifier', () => {
   it('should verify a valid compact JWS', async () => {
     const payload = { hello: 'world' }
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -364,7 +363,7 @@ describe('JAdES Verifier', () => {
 
   it('should reject invalid signature', async () => {
     const token = new Token({ data: 'test' })
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -385,7 +384,7 @@ describe('JAdES Verifier', () => {
   it('should decode JWS without verification', async () => {
     const payload = { hello: 'world' }
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -404,7 +403,7 @@ describe('JAdES Verifier', () => {
   it('should verify using auto-detect function', async () => {
     const payload = { test: 'data' }
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token.setProtectedHeader({
       alg: 'ES256',
@@ -433,7 +432,7 @@ describe('JAdES B-B Profile', () => {
     }
 
     const token = new Token(payload)
-    const certs = parseCerts(TEST_CERT)
+    const certs = parseCertificateChain(TEST_CERT)
 
     token
       .setProtectedHeader({ alg: 'ES256' })
