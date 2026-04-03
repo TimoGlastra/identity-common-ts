@@ -100,24 +100,3 @@ export function encodeJSON(obj: object): string {
 export function getSigningTime(): string {
   return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z')
 }
-
-/**
- * Validate that the protected header has at least one certificate header.
- * As per ETSI TS 119 182-1 Section 5.1.7, a JAdES signature shall have
- * at least one of: x5t#S256, x5c, x5t#o, sigX5ts.
- *
- * @param header - Protected header object
- * @returns true if valid
- * @throws JAdESException if no certificate header is present
- */
-export function validateCertificateHeaders(header: Record<string, unknown>): boolean {
-  const hasCertHeader = !!(header['x5t#S256'] || header.x5c || header['x5t#o'] || header.sigX5ts)
-
-  if (!hasCertHeader) {
-    throw new JAdESException(
-      'JAdES signature requires at least one certificate header: x5t#S256, x5c, x5t#o, or sigX5ts'
-    )
-  }
-
-  return true
-}

@@ -68,7 +68,6 @@ export {
   generateX5tO,
   generateX5tS256,
   getSigningTime,
-  validateCertificateHeaders,
 } from './utils'
 export type { VerifyResult } from './verifier'
 // Verifier functions
