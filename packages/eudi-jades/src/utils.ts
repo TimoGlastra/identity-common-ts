@@ -5,7 +5,7 @@
  */
 
 import { parseCertificateChain, sha256, sha384, sha512 } from '@owf/crypto'
-import { base64urlEncode } from '@owf/identity-common'
+import { base64, base64urlEncode, uint8ArrayToBase64Url } from '@owf/identity-common'
 import { JAdESException } from './jades-exception'
 import type { X5tO } from './types'
 
@@ -34,7 +34,7 @@ export function generateX5c(certs: string | string[]): string[] {
  * @returns Base64url-encoded SHA-256 thumbprint
  */
 export function generateX5tS256(certDer: string): string {
-  const certBytes = base64ToUint8Array(certDer)
+  const certBytes = base64.decode(certDer)
   const hash = sha256(certBytes.buffer as ArrayBuffer)
   return uint8ArrayToBase64Url(hash)
 }
@@ -55,7 +55,7 @@ export function generateX5tO(certDer: string, algorithm: 'SHA-384' | 'SHA-512' =
   } as const
 
   const hashFn = algorithm === 'SHA-384' ? sha384 : sha512
-  const certBytes = base64ToUint8Array(certDer)
+  const certBytes = base64.decode(certDer)
   const hash = hashFn(certBytes.buffer as ArrayBuffer)
 
   return {
@@ -120,26 +120,4 @@ export function validateCertificateHeaders(header: Record<string, unknown>): boo
   }
 
   return true
-}
-
-// Helper functions for base64/base64url conversion
-
-function base64ToUint8Array(base64: string): Uint8Array {
-  // Handle both standard base64 and base64url
-  const normalized = base64.replace(/-/g, '+').replace(/_/g, '/')
-  const padded = normalized.padEnd(normalized.length + ((4 - (normalized.length % 4)) % 4), '=')
-  const binaryString = atob(padded)
-  const bytes = new Uint8Array(binaryString.length)
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i)
-  }
-  return bytes
-}
-
-function uint8ArrayToBase64Url(bytes: Uint8Array): string {
-  let binary = ''
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i])
-  }
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
 }
