@@ -260,6 +260,10 @@ Validates a LoTE document against ETSI TS 119 602 schema. Returns validation res
 
 Type assertion that throws `ValidationError` if the LoTE document is invalid.
 
+#### `validateLoTEProfile(lote, profile: LoTEProfile | LoTEProfile[]): ValidationResult`
+
+Validates a LoTE document against a known LoTE Profile, such as EU PID Providers List, mDL Providers List, etc. Returns validation result with error details.
+
 ### Builders
 
 #### `trustedEntity(): TrustedEntityBuilder`
