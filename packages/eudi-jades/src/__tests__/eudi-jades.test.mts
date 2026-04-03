@@ -1,7 +1,17 @@
 import { ES256, parseCertificateChain } from '@owf/crypto'
 import { describe, expect, it } from 'vitest'
 import { CommitmentOIDs, JAdESProfile } from '../constants'
-import { decode, generateX5c, generateX5tS256, getSigningTime, type SignAlg, verify, verifyCompact } from '../index'
+import {
+  decode,
+  detectProfiles,
+  generateX5c,
+  generateX5tS256,
+  getSigningTime,
+  type SignAlg,
+  validateProfile,
+  verify,
+  verifyCompact,
+} from '../index'
 import { JAdESException } from '../jades-exception'
 import {
   GeneralJWSSchema,
@@ -431,5 +441,184 @@ describe('JAdES B-B Profile', () => {
     expect(result.valid).toBe(true)
     expect(result.header.x5c).toEqual(certs)
     expect(result.header.kid).toBe('signer-key-2025')
+  })
+})
+
+describe('JAdES Profile Validation', () => {
+  it('should validate B-B profile with required fields', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_B)
+    expect(result.valid).toBe(true)
+    expect(result.missing).toBeUndefined()
+  })
+
+  it('should fail B-B validation when missing alg', () => {
+    const header = {
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_B)
+    expect(result.valid).toBe(false)
+    expect(result.missing).toContain('alg (signature algorithm)')
+  })
+
+  it('should fail B-B validation when missing certificate header', () => {
+    const header = {
+      alg: 'ES256' as const,
+      sigT: '2025-01-01T00:00:00Z',
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_B)
+    expect(result.valid).toBe(false)
+    expect(result.missing).toContain('certificate header (x5t#S256, x5c, x5t#o, or sigX5ts)')
+  })
+
+  it('should fail B-B validation when missing sigT', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_B)
+    expect(result.valid).toBe(false)
+    expect(result.missing).toContain('sigT (signing time)')
+  })
+
+  it('should validate B-B with x5t#S256 instead of x5c', () => {
+    const header = {
+      alg: 'ES256' as const,
+      'x5t#S256': 'thumbprint',
+      sigT: '2025-01-01T00:00:00Z',
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_B)
+    expect(result.valid).toBe(true)
+  })
+
+  it('should validate B-T profile with sigTst in etsiU', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+    const unprotectedHeader = {
+      etsiU: [{ sigTst: { tstTokens: [] } }],
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_T, unprotectedHeader)
+    expect(result.valid).toBe(true)
+  })
+
+  it('should fail B-T validation when missing sigTst', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_T)
+    expect(result.valid).toBe(false)
+    expect(result.missing).toContain('sigTst (signature timestamp) in etsiU')
+  })
+
+  it('should validate B-LT profile with xVals and rVals', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+    const unprotectedHeader = {
+      etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }],
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_LT, unprotectedHeader)
+    expect(result.valid).toBe(true)
+  })
+
+  it('should fail B-LT validation when missing xVals', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+    const unprotectedHeader = {
+      etsiU: [{ sigTst: { tstTokens: [] } }, { rVals: {} }],
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_LT, unprotectedHeader)
+    expect(result.valid).toBe(false)
+    expect(result.missing).toContain('xVals (certificate values) in etsiU')
+  })
+
+  it('should validate B-LTA profile with arcTst', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+    const unprotectedHeader = {
+      etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }, { arcTst: { tstTokens: [] } }],
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_LTA, unprotectedHeader)
+    expect(result.valid).toBe(true)
+  })
+
+  it('should fail B-LTA validation when missing arcTst', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+    const unprotectedHeader = {
+      etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }],
+    }
+
+    const result = validateProfile(header, JAdESProfile.B_LTA, unprotectedHeader)
+    expect(result.valid).toBe(false)
+    expect(result.missing).toContain('arcTst (archive timestamp) in etsiU')
+  })
+
+  it('should detect all satisfied profiles', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+    const unprotectedHeader = {
+      etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }],
+    }
+
+    const profiles = detectProfiles(header, unprotectedHeader)
+    expect(profiles).toContain(JAdESProfile.B_B)
+    expect(profiles).toContain(JAdESProfile.B_T)
+    expect(profiles).toContain(JAdESProfile.B_LT)
+    expect(profiles).not.toContain(JAdESProfile.B_LTA)
+  })
+
+  it('should detect only B-B for basic signature', () => {
+    const header = {
+      alg: 'ES256' as const,
+      x5c: ['cert'],
+      sigT: '2025-01-01T00:00:00Z',
+    }
+
+    const profiles = detectProfiles(header)
+    expect(profiles).toEqual([JAdESProfile.B_B])
+  })
+
+  it('should return empty array when no profile is satisfied', () => {
+    const header = {
+      alg: 'ES256' as const,
+    }
+
+    const profiles = detectProfiles(header)
+    expect(profiles).toEqual([])
   })
 })
