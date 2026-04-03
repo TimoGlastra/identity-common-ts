@@ -172,7 +172,9 @@ export function decode<T = unknown>(
         return {
           header: JSON.parse(base64urlDecode(sig.protected)) as ProtectedHeaderParams,
           payload: parsed.payload ? (JSON.parse(base64urlDecode(parsed.payload)) as T) : ({} as T),
-          unprotectedHeader: unprotectedResult?.success ? (unprotectedResult.data as UnprotectedHeaderParams) : undefined,
+          unprotectedHeader: unprotectedResult?.success
+            ? (unprotectedResult.data as UnprotectedHeaderParams)
+            : undefined,
         }
       }
     } catch {
