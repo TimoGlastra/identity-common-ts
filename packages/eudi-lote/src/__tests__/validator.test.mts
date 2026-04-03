@@ -1,6 +1,9 @@
+import { decodeJwt } from '@owf/identity-common'
 import { describe, expect, it } from 'vitest'
 import { assertValidLoTE, validateLoTE } from '../index'
 import type { LoTEDocument } from '../types'
+import { LoTEProfile, validateLoTEProfile } from '../validator'
+import { EUPIDProvidersJWT, WalletProvidersJWT, WRPACProvidersJWT } from './fixtures.mjs'
 
 describe('LoTE Validator', () => {
   const createMinimalValidLoTE = (): LoTEDocument => ({
@@ -276,8 +279,6 @@ describe('LoTE Validator', () => {
 
       const result = validateLoTE(lote)
 
-      console.log(result)
-
       expect(result.valid).toBe(false)
       expect(
         result.errors.some(
@@ -443,6 +444,29 @@ describe('LoTE Validator', () => {
       } catch (error) {
         expect((error as Error).message).toContain('ListAndSchemeInformation')
       }
+    })
+  })
+
+  describe('validateLoTEProfile', () => {
+    it('should validate against EUPIDProvidersList profile', () => {
+      const { payload: lote } = decodeJwt(EUPIDProvidersJWT)
+      const result = validateLoTEProfile(lote, LoTEProfile.EUPIDProvidersList)
+
+      expect(result.valid).toBe(true)
+    })
+
+    it('should validate against EUWalletProvidersList profile', () => {
+      const { payload: lote } = decodeJwt(WalletProvidersJWT)
+      const result = validateLoTEProfile(lote, LoTEProfile.EUWalletProvidersList)
+
+      expect(result.valid).toBe(true)
+    })
+
+    it('should validate against EUWRPACProvidersList profile', () => {
+      const { payload: lote } = decodeJwt(WRPACProvidersJWT)
+      const result = validateLoTEProfile(lote, LoTEProfile.EUWRPACProvidersList)
+
+      expect(result.valid).toBe(true)
     })
   })
 })
