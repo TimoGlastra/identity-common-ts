@@ -26,7 +26,7 @@
     "@owf/crypto": "workspace:*",
     "@owf/identity-common": "workspace:*",
     "@owf/token-status-list": "workspace:*",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "markdownlint-cli2": "^0.22.0",
     "tsdown": "0.21.7",
     "typescript": "^6.0.2",
