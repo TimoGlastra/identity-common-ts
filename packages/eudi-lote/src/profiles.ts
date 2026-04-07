@@ -41,7 +41,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_value',
         values: [loTEType],
-        error: `LoTEType must be ${loTEType}`,
+        message: `LoTEType must be ${loTEType}`,
         path: [...path, 'LoTEType'],
       })
     }
@@ -50,7 +50,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_value',
         values: [loTEVersionIdentifier],
-        error: `LoTEVersionIdentifier must be ${loTEVersionIdentifier}`,
+        message: `LoTEVersionIdentifier must be ${loTEVersionIdentifier}`,
         path: [...path, 'LoTEVersionIdentifier'],
       })
     }
@@ -59,7 +59,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_value',
         values: [statusDeterminationApproach],
-        error: `StatusDeterminationApproach must be ${statusDeterminationApproach}`,
+        message: `StatusDeterminationApproach must be ${statusDeterminationApproach}`,
         path: [...path, 'StatusDeterminationApproach'],
       })
     }
@@ -68,7 +68,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_value',
         values: [schemeTerritory],
-        error: `SchemeTerritory must be ${schemeTerritory}`,
+        message: `SchemeTerritory must be ${schemeTerritory}`,
         path: [...path, 'SchemeTerritory'],
       })
     }
@@ -80,7 +80,7 @@ const listAndSchemeInformationRefinement =
     ) {
       ctx.addIssue({
         code: 'custom',
-        error: `SchemeTypeCommunityRules must contain a single element with uriValue of ${schemeTypeCommunityRulesUri}`,
+        message: `SchemeTypeCommunityRules must contain a single element with uriValue of ${schemeTypeCommunityRulesUri}`,
         path: [...path, 'SchemeTypeCommunityRules'],
       })
     }
@@ -89,7 +89,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_type',
         expected: 'undefined',
-        error: 'HistoricalInformationPeriod must not be present',
+        message: 'HistoricalInformationPeriod must not be present',
         path: [...path, 'HistoricalInformationPeriod'],
       })
     }
@@ -98,7 +98,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_value',
         values: [historicalInformationPeriod],
-        error: `HistoricalInformationPeriod must be ${historicalInformationPeriod}`,
+        message: `HistoricalInformationPeriod must be ${historicalInformationPeriod}`,
         path: [...path, 'HistoricalInformationPeriod'],
       })
     }
@@ -107,7 +107,7 @@ const listAndSchemeInformationRefinement =
       ctx.addIssue({
         code: 'invalid_type',
         expected: 'undefined',
-        error: 'PointersToOtherLoTE must not be present',
+        message: 'PointersToOtherLoTE must not be present',
         path: [...path, 'PointersToOtherLoTE'],
       })
     }
@@ -118,7 +118,7 @@ const listAndSchemeInformationRefinement =
     if (nextUpdate - listIssueDateTime > SIX_MONTHS_IN_MS) {
       ctx.addIssue({
         code: 'custom',
-        error: 'NextUpdate must be within 6 months of ListIssueDateTime',
+        message: 'NextUpdate must be within 6 months of ListIssueDateTime',
         path: [...path, 'NextUpdate'],
       })
     }
@@ -143,7 +143,7 @@ const trustedEntitiesListRefinement =
         if (!uri) {
           ctx.addIssue({
             code: 'custom',
-            error: `Each TrustedEntityInformation.TEInformationURI must contain at least one URI starting with ${informationUriPrefix}`,
+            message: `Each TrustedEntityInformation.TEInformationURI must contain at least one URI starting with ${informationUriPrefix}`,
             path: [...trustedEntityPath, 'TrustedEntityInformation', 'TEInformationURI'],
           })
         } else {
@@ -151,7 +151,7 @@ const trustedEntitiesListRefinement =
           if (rest.length !== 2) {
             ctx.addIssue({
               code: 'custom',
-              error: `URI starting with ${informationUriPrefix} must be followed by a 2-letter country code`,
+              message: `URI starting with ${informationUriPrefix} must be followed by a 2-letter country code`,
               path: [...trustedEntityPath, 'TrustedEntityInformation', 'TEInformationURI'],
             })
           }
@@ -165,7 +165,7 @@ const trustedEntitiesListRefinement =
           ctx.addIssue({
             code: 'invalid_type',
             expected: 'undefined',
-            error: 'ServiceStatus must not be present',
+            message: 'ServiceStatus must not be present',
             path: [...entityServicePath, 'ServiceInformation', 'ServiceStatus'],
           })
         }
@@ -174,7 +174,7 @@ const trustedEntitiesListRefinement =
           ctx.addIssue({
             code: 'invalid_type',
             expected: 'undefined',
-            error: 'StatusStartingTime must not be present',
+            message: 'StatusStartingTime must not be present',
             path: [...entityServicePath, 'ServiceInformation', 'StatusStartingTime'],
           })
         }
@@ -185,7 +185,7 @@ const trustedEntitiesListRefinement =
         ) {
           ctx.addIssue({
             code: 'invalid_value',
-            error: `ServiceTypeIdentifier must be one of the following: ${allowedServiceTypeIdentifiers.join(', ')}`,
+            message: `ServiceTypeIdentifier must be one of the following: ${allowedServiceTypeIdentifiers.join(', ')}`,
             path: [...entityServicePath, 'ServiceInformation', 'ServiceTypeIdentifier'],
             values: allowedServiceTypeIdentifiers,
           })
