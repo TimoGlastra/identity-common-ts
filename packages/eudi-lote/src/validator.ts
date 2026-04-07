@@ -128,10 +128,12 @@ export function validateLoTEProfile(loteDocument: unknown, profile: LoTEProfile 
         path: 'LoTEType',
         message: `Document does not match any of the specified profiles: ${profiles.join(', ')}`,
       },
-      ...result.error.issues.map((issue) => ({
-        path: issue.path.join('.'),
-        message: issue.message,
-      })),
+      ...result.error.issues
+        .flatMap((issue) => (issue.code === 'invalid_union' ? issue.errors.flat() : [issue]))
+        .map((issue) => ({
+          path: issue.path.join('.'),
+          message: issue.message,
+        })),
     ],
   }
 }
