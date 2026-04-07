@@ -6,7 +6,7 @@
  */
 
 import { JAdESProfile } from './constants'
-import type { GeneralJWS, ProtectedHeaderParams, UnprotectedHeaderParams } from './types'
+import type { ProtectedHeaderParams, UnprotectedHeaderParams } from './types'
 
 /**
  * Result of profile validation.
@@ -21,10 +21,7 @@ export interface ProfileValidationResult {
 /**
  * Check if an etsiU array contains an element with the specified key.
  */
-function hasEtsiUElement(
-  etsiU: unknown[] | undefined,
-  key: 'sigTst' | 'xVals' | 'rVals' | 'arcTst'
-): boolean {
+function hasEtsiUElement(etsiU: unknown[] | undefined, key: 'sigTst' | 'xVals' | 'rVals' | 'arcTst'): boolean {
   if (!etsiU || !Array.isArray(etsiU)) return false
   return etsiU.some((item) => typeof item === 'object' && item !== null && key in item)
 }

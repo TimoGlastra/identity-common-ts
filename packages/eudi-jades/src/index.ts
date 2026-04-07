@@ -17,6 +17,9 @@
 export { CommitmentOIDs, CRITICAL_PARAMETERS, DETACHED_MECHANISM_IDS, JAdESProfile } from './constants'
 // Exception
 export { JAdESException } from './jades-exception'
+// Profile validation
+export type { ProfileValidationResult } from './profile'
+export { detectProfiles, validateProfile } from './profile'
 // Zod Schemas
 export {
   ArcTstSchema,
@@ -69,9 +72,6 @@ export {
   generateX5tS256,
   getSigningTime,
 } from './utils'
-// Profile validation
-export type { ProfileValidationResult } from './profile'
-export { detectProfiles, validateProfile } from './profile'
 export type { VerifyResult } from './verifier'
 // Verifier functions
 export { decode, verify, verifyCompact, verifyGeneral } from './verifier'
