@@ -43,6 +43,7 @@ export {
   TrustedEntityServiceSchema,
   X509CertificateRefSchema,
 } from './schemas'
+export type { UpdateLoTEVersionOptions } from './signer'
 // Signer
 export {
   addTrustedEntity,

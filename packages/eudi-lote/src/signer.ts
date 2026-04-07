@@ -66,14 +66,15 @@ export async function signLoTE(options: SignOptions): Promise<SignedLoTE> {
 /**
  * Create a new LoTE document with required structure
  * Per ETSI TS 119 602, only SchemeOperatorName, ListIssueDateTime and NextUpdate are required
+ * Default NextUpdate is 6 months per ETSI TS 119 602 maximum validity
  */
 export function createLoTE(
   schemeInfo: Partial<ListAndSchemeInformation> & Pick<ListAndSchemeInformation, 'SchemeOperatorName'>,
   entities: TrustedEntity[] = []
 ): LoTEDocument {
   const now = new Date()
-  const nextYear = new Date(now)
-  nextYear.setFullYear(nextYear.getFullYear() + 1)
+  const sixMonthsLater = new Date(now)
+  sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6)
 
   const lote: LoTE = {
     ListAndSchemeInformation: {
@@ -91,7 +92,7 @@ export function createLoTE(
       HistoricalInformationPeriod: schemeInfo.HistoricalInformationPeriod,
       PointersToOtherLoTE: schemeInfo.PointersToOtherLoTE,
       ListIssueDateTime: schemeInfo.ListIssueDateTime ?? now.toISOString(),
-      NextUpdate: schemeInfo.NextUpdate ?? nextYear.toISOString(),
+      NextUpdate: schemeInfo.NextUpdate ?? sixMonthsLater.toISOString(),
       DistributionPoints: schemeInfo.DistributionPoints,
       SchemeExtensions: schemeInfo.SchemeExtensions,
     },
@@ -102,12 +103,58 @@ export function createLoTE(
 }
 
 /**
- * Increment the sequence number and update timestamps for a new version
+ * Options for updating a LoTE version
  */
-export function updateLoTEVersion(lote: LoTEDocument): LoTEDocument {
-  const now = new Date()
-  const nextYear = new Date(now)
-  nextYear.setFullYear(nextYear.getFullYear() + 1)
+export interface UpdateLoTEVersionOptions {
+  /**
+   * The issue date/time for the new version.
+   * Useful when generating a LoTE in advance before publication.
+   * Defaults to the current time.
+   */
+  listIssueDateTime?: Date | string
+  /**
+   * The next update date/time.
+   * Per ETSI TS 119 602, maximum validity is 6 months.
+   * Defaults to 6 months from listIssueDateTime.
+   */
+  nextUpdate?: Date | string
+}
+
+/**
+ * Increment the sequence number and update timestamps for a new version
+ *
+ * @param lote - The LoTE document to update
+ * @param options - Optional settings for listIssueDateTime and nextUpdate
+ * @returns A new LoTE document with incremented sequence number and updated timestamps
+ *
+ * @example Update with defaults (now + 6 months):
+ * ```typescript
+ * const updated = updateLoTEVersion(lote);
+ * ```
+ *
+ * @example Schedule for future publication:
+ * ```typescript
+ * const updated = updateLoTEVersion(lote, {
+ *   listIssueDateTime: new Date('2025-01-01'),
+ *   nextUpdate: new Date('2025-06-01'),
+ * });
+ * ```
+ */
+export function updateLoTEVersion(lote: LoTEDocument, options: UpdateLoTEVersionOptions = {}): LoTEDocument {
+  const issueDate = options.listIssueDateTime
+    ? typeof options.listIssueDateTime === 'string'
+      ? new Date(options.listIssueDateTime)
+      : options.listIssueDateTime
+    : new Date()
+
+  const defaultNextUpdate = new Date(issueDate)
+  defaultNextUpdate.setMonth(defaultNextUpdate.getMonth() + 6)
+
+  const nextUpdateDate = options.nextUpdate
+    ? typeof options.nextUpdate === 'string'
+      ? options.nextUpdate
+      : options.nextUpdate.toISOString()
+    : defaultNextUpdate.toISOString()
 
   return {
     LoTE: {
@@ -115,8 +162,8 @@ export function updateLoTEVersion(lote: LoTEDocument): LoTEDocument {
       ListAndSchemeInformation: {
         ...lote.LoTE.ListAndSchemeInformation,
         LoTESequenceNumber: lote.LoTE.ListAndSchemeInformation.LoTESequenceNumber + 1,
-        ListIssueDateTime: now.toISOString(),
-        NextUpdate: nextYear.toISOString(),
+        ListIssueDateTime: issueDate.toISOString(),
+        NextUpdate: nextUpdateDate,
       },
     },
   }

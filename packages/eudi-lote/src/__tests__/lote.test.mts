@@ -44,13 +44,19 @@ describe('LoTE Creation', () => {
     expect(lote.LoTE.ListAndSchemeInformation.SchemeOperatorAddress).toBeDefined()
   })
 
-  it('should auto-generate ListIssueDateTime and NextUpdate', () => {
+  it('should auto-generate ListIssueDateTime and NextUpdate with 6-month default per ETSI spec', () => {
+    const beforeCreate = new Date()
     const lote = createLoTE(minimalSchemeInfo)
     const issueDate = new Date(lote.LoTE.ListAndSchemeInformation.ListIssueDateTime)
     const nextUpdate = new Date(lote.LoTE.ListAndSchemeInformation.NextUpdate)
 
     expect(issueDate.getTime()).toBeLessThanOrEqual(Date.now())
-    expect(nextUpdate.getTime()).toBeGreaterThan(issueDate.getTime())
+    expect(issueDate.getTime()).toBeGreaterThanOrEqual(beforeCreate.getTime())
+
+    // NextUpdate should be approximately 6 months after issue date
+    const expectedNextUpdate = new Date(issueDate)
+    expectedNextUpdate.setMonth(expectedNextUpdate.getMonth() + 6)
+    expect(nextUpdate.getTime()).toBe(expectedNextUpdate.getTime())
   })
 
   it('should accept custom ListIssueDateTime and NextUpdate', () => {
@@ -134,6 +140,57 @@ describe('LoTE Version Management', () => {
 
     expect(updated.LoTE.ListAndSchemeInformation.SchemeName).toEqual([{ lang: 'en', value: 'My Scheme' }])
     expect(updated.LoTE.ListAndSchemeInformation.SchemeTerritory).toBe('DE')
+  })
+
+  it('should accept custom listIssueDateTime and nextUpdate', () => {
+    const lote = createLoTE({
+      SchemeOperatorName: [{ lang: 'en', value: 'Test' }],
+    })
+
+    const customIssueDate = new Date('2025-06-01T00:00:00.000Z')
+    const customNextUpdate = new Date('2025-12-01T00:00:00.000Z')
+
+    const updated = updateLoTEVersion(lote, {
+      listIssueDateTime: customIssueDate,
+      nextUpdate: customNextUpdate,
+    })
+
+    expect(updated.LoTE.ListAndSchemeInformation.ListIssueDateTime).toBe('2025-06-01T00:00:00.000Z')
+    expect(updated.LoTE.ListAndSchemeInformation.NextUpdate).toBe('2025-12-01T00:00:00.000Z')
+  })
+
+  it('should accept string dates for listIssueDateTime and nextUpdate', () => {
+    const lote = createLoTE({
+      SchemeOperatorName: [{ lang: 'en', value: 'Test' }],
+    })
+
+    const updated = updateLoTEVersion(lote, {
+      listIssueDateTime: '2025-06-01T00:00:00.000Z',
+      nextUpdate: '2025-12-01T00:00:00.000Z',
+    })
+
+    expect(updated.LoTE.ListAndSchemeInformation.ListIssueDateTime).toBe('2025-06-01T00:00:00.000Z')
+    expect(updated.LoTE.ListAndSchemeInformation.NextUpdate).toBe('2025-12-01T00:00:00.000Z')
+  })
+
+  it('should default NextUpdate to 6 months from listIssueDateTime', () => {
+    const lote = createLoTE({
+      SchemeOperatorName: [{ lang: 'en', value: 'Test' }],
+    })
+
+    const customIssueDate = new Date('2025-01-15T12:00:00.000Z')
+
+    const updated = updateLoTEVersion(lote, {
+      listIssueDateTime: customIssueDate,
+    })
+
+    const nextUpdate = new Date(updated.LoTE.ListAndSchemeInformation.NextUpdate)
+    const issueDate = new Date(updated.LoTE.ListAndSchemeInformation.ListIssueDateTime)
+
+    // NextUpdate should be approximately 6 months after issue date
+    const monthsDiff =
+      (nextUpdate.getFullYear() - issueDate.getFullYear()) * 12 + (nextUpdate.getMonth() - issueDate.getMonth())
+    expect(monthsDiff).toBe(6)
   })
 })
 
