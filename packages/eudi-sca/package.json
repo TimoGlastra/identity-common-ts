@@ -31,9 +31,13 @@
     "build": "tsdown src/index.ts --format esm --dts --sourcemap"
   },
   "dependencies": {
+    "@openid4vc/openid4vci": "0.5.0-alpha-20260408113505",
+    "@owf/crypto": "workspace:",
     "@owf/identity-common": "workspace:",
-    "@openid4vc/openid4vci": "^0.4.6",
     "@owf/mdoc": "^0.6.0",
     "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "nock": "^14.0.12"
   }
 }

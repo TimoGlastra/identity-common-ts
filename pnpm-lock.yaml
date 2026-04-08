@@ -69,8 +69,11 @@ importers:
   packages/eudi-sca:
     dependencies:
       '@openid4vc/openid4vci':
-        specifier: ^0.4.6
-        version: 0.4.6
+        specifier: 0.5.0-alpha-20260408113505
+        version: 0.5.0-alpha-20260408113505
+      '@owf/crypto':
+        specifier: 'workspace:'
+        version: link:../crypto
       '@owf/identity-common':
         specifier: 'workspace:'
         version: link:../identity-common
@@ -80,6 +83,10 @@ importers:
       zod:
         specifier: ^4.3.6
         version: 4.3.6
+    devDependencies:
+      nock:
+        specifier: ^14.0.12
+        version: 14.0.12
 
   packages/identity-common: {}
 
@@ -496,6 +503,10 @@ packages:
     resolution: {integrity: sha512-EFd6cVbHsgLa6wa4RljGj6Wk75qoHxUSyc5asLyyPSyuhIcdS2Q3Phw6ImS1q+CkALthJRShiYfKANcQMuMqsQ==}
     engines: {node: '>=18'}
 
+  '@mswjs/interceptors@0.41.3':
+    resolution: {integrity: sha512-cXu86tF4VQVfwz8W1SPbhoRyHJkti6mjH/XJIxp40jhO4j2k1m4KYrEykxqWPkFF3vrK4rgQppBh//AwyGSXPA==}
+    engines: {node: '>=18'}
+
   '@napi-rs/wasm-runtime@1.1.2':
     resolution: {integrity: sha512-sNXv5oLJ7ob93xkZ1XnxisYhGYXfaG9f65/ZgYuAu3qt7b3NadcOEhLvx28hv31PgX8SZJRYrAIPQilQmFpLVw==}
     peerDependencies:
@@ -527,14 +538,14 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@openid4vc/oauth2@0.4.6':
-    resolution: {integrity: sha512-PVa+N9UHt4KhHh02KHUHqS64vdnoaktNSVr7VUgeaB1NS0c3+7UIa2A/TnsyZqUAy9TxGltAflxsaWO+HtWPQQ==}
+  '@openid4vc/oauth2@0.5.0-alpha-20260408113505':
+    resolution: {integrity: sha512-YwBYSN7xyPdqfze82CgxHpYmlDW5Cfge4c/p4tFTm+YJVQulHPTWL8EwDbOr1MEYZ1tFL/a7zXMemwlIpdQlbQ==}
 
-  '@openid4vc/openid4vci@0.4.6':
-    resolution: {integrity: sha512-qjxLeE6K285r+lyy+4jJFS+M70+dyImVGvqo97BO+JxL4059jMb/FwJIXjnp2Ygl8+FuaEgFxhGpFdnaNwj30w==}
+  '@openid4vc/openid4vci@0.5.0-alpha-20260408113505':
+    resolution: {integrity: sha512-vg/SdWocVcxSVhcVgEXD4Ev9sXX/Aw2IG0/SdV5ayqNeDUEVfOqx+SXAPqvsUAgMxoZO8kd2xhKFQCRNYHG8kA==}
 
-  '@openid4vc/utils@0.4.6':
-    resolution: {integrity: sha512-qpZ40ccnYTMdmW5zzIiN5SvNBzWHu0cUz97Itw+YMC8obosQ62c4Tg9LpwWwVirouN9oOQZ7IuF1EDakiB8w3w==}
+  '@openid4vc/utils@0.5.0-alpha-20260408113505':
+    resolution: {integrity: sha512-+24Dxr+j8XHKGRjWjbCN4cR1kWOAYldQOZyT60dSH09ogfLEK2GIAwPcsb47aAwoDStvS/LLS/yqhzEhyfF3JA==}
 
   '@owf/mdoc@0.6.0':
     resolution: {integrity: sha512-vJL62hzjcSweBjDD9eRUH1RIMSzZUtHKjVFMMo50oHPLO9ZVZbQABFe9IFoa5AgXkwfv27HjnFv/eRbkOrlsUA==}
@@ -1235,6 +1246,9 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
+  json-stringify-safe@5.0.1:
+    resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
+
   jsonc-parser@3.3.1:
     resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
 
@@ -1409,6 +1423,10 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nock@14.0.12:
+    resolution: {integrity: sha512-kZM3bHV0KzhHH6E2eRszHyML/w87AUzLBwupNTHohtYWP9fZYgUPmCbSKq6ITfEEmHqN4/p0MscvUipT4P5Qsg==}
+    engines: {node: '>=18.20.0 <20 || >=20.12.1'}
+
   node-gyp-build-optional-packages@5.1.1:
     resolution: {integrity: sha512-+P72GAjVAbTxjjwUmwjVrqrdZROD4nf8KgpBoDxqXXTiYZZt/ud60dE5yvCSr9lRO8e8yv6kgJIC0K0PfZFVQw==}
     hasBin: true
@@ -1496,6 +1514,10 @@ packages:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+
+  propagate@2.0.1:
+    resolution: {integrity: sha512-vGrhOavPSTz4QVNuBNdcNXePNdNMaO1xj9yBeH1ScQPjk/rhg9sSlCXPhMkFuaNNW/syTvYqsnbIJxMBfRbbag==}
+    engines: {node: '>= 8'}
 
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
@@ -2304,6 +2326,15 @@ snapshots:
       strict-event-emitter: 0.5.1
     optional: true
 
+  '@mswjs/interceptors@0.41.3':
+    dependencies:
+      '@open-draft/deferred-promise': 2.2.0
+      '@open-draft/logger': 0.3.0
+      '@open-draft/until': 2.1.0
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      strict-event-emitter: 0.5.1
+
   '@napi-rs/wasm-runtime@1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
     dependencies:
       '@emnapi/core': 1.9.1
@@ -2325,30 +2356,27 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@open-draft/deferred-promise@2.2.0':
-    optional: true
+  '@open-draft/deferred-promise@2.2.0': {}
 
   '@open-draft/logger@0.3.0':
     dependencies:
       is-node-process: 1.2.0
       outvariant: 1.4.3
-    optional: true
 
-  '@open-draft/until@2.1.0':
-    optional: true
+  '@open-draft/until@2.1.0': {}
 
-  '@openid4vc/oauth2@0.4.6':
+  '@openid4vc/oauth2@0.5.0-alpha-20260408113505':
     dependencies:
-      '@openid4vc/utils': 0.4.6
+      '@openid4vc/utils': 0.5.0-alpha-20260408113505
       zod: 4.3.6
 
-  '@openid4vc/openid4vci@0.4.6':
+  '@openid4vc/openid4vci@0.5.0-alpha-20260408113505':
     dependencies:
-      '@openid4vc/oauth2': 0.4.6
-      '@openid4vc/utils': 0.4.6
+      '@openid4vc/oauth2': 0.5.0-alpha-20260408113505
+      '@openid4vc/utils': 0.5.0-alpha-20260408113505
       zod: 4.3.6
 
-  '@openid4vc/utils@0.4.6':
+  '@openid4vc/utils@0.5.0-alpha-20260408113505':
     dependencies:
       buffer: 6.0.3
       zod: 4.3.6
@@ -2910,8 +2938,7 @@ snapshots:
 
   is-hexadecimal@2.0.1: {}
 
-  is-node-process@1.2.0:
-    optional: true
+  is-node-process@1.2.0: {}
 
   is-number@7.0.0: {}
 
@@ -2938,6 +2965,8 @@ snapshots:
       argparse: 2.0.1
 
   jsesc@3.1.0: {}
+
+  json-stringify-safe@5.0.1: {}
 
   jsonc-parser@3.3.1: {}
 
@@ -3250,6 +3279,12 @@ snapshots:
 
   nanoid@3.3.11: {}
 
+  nock@14.0.12:
+    dependencies:
+      '@mswjs/interceptors': 0.41.3
+      json-stringify-safe: 5.0.1
+      propagate: 2.0.1
+
   node-gyp-build-optional-packages@5.1.1:
     dependencies:
       detect-libc: 2.1.2
@@ -3263,8 +3298,7 @@ snapshots:
 
   outdent@0.5.0: {}
 
-  outvariant@1.4.3:
-    optional: true
+  outvariant@1.4.3: {}
 
   p-filter@2.1.0:
     dependencies:
@@ -3324,6 +3358,8 @@ snapshots:
       source-map-js: 1.2.1
 
   prettier@2.8.8: {}
+
+  propagate@2.0.1: {}
 
   punycode.js@2.3.1: {}
 
@@ -3482,8 +3518,7 @@ snapshots:
 
   std-env@4.0.0: {}
 
-  strict-event-emitter@0.5.1:
-    optional: true
+  strict-event-emitter@0.5.1: {}
 
   string-argv@0.3.2: {}
 
