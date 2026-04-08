@@ -1,136 +1,111 @@
 import { expect, suite, test } from 'vitest'
-import { parseCredentialMetadataUri } from '../credentialMetadata/schema'
+import { ZodError } from 'zod'
+import { parseCredentialMetadata } from '../credentialMetadata'
 
-const oid4vciIssuerMetadata = {
-  credential_issuer: 'https://credential-issuer.example.com',
-  authorization_servers: ['https://server.example.com'],
-  credential_endpoint: 'https://credential-issuer.example.com/credential',
-  nonce_endpoint: 'https://credential-issuer.example.com/nonce',
-  deferred_credential_endpoint: 'https://credential-issuer.example.com/deferred_credential',
-  notification_endpoint: 'https://credential-issuer.example.com/notification',
-  credential_request_encryption: {
-    jwks: [
-      {
-        kty: 'EC',
-        kid: 'ac',
-        use: 'enc',
-        crv: 'P-256',
-        alg: 'ECDH-ES',
-        x: 'YO4epjifD-KWeq1sL2tNmm36BhXnkJ0He-WqMYrp9Fk',
-        y: 'Hekpm0zfK7C-YccH5iBjcIXgf6YdUvNUac_0At55Okk',
-      },
-    ],
-    enc_values_supported: ['A128GCM'],
-    zip_values_supported: ['DEF'],
-    encryption_required: true,
-  },
-  credential_response_encryption: {
-    alg_values_supported: ['ECDH-ES'],
-    enc_values_supported: ['A128GCM'],
-    zip_values_supported: ['DEF'],
-    encryption_required: true,
-  },
-  batch_credential_issuance: {
-    batch_size: 10,
-  },
-  display: [
-    {
-      name: 'Example University',
-      locale: 'en-US',
-      logo: {
-        uri: 'https://university.example.edu/public/logo.png',
-        alt_text: 'a square logo of a university',
-      },
-    },
-    {
-      name: 'Example Université',
-      locale: 'fr-FR',
-      logo: {
-        uri: 'https://university.example.edu/public/logo.png',
-        alt_text: 'Un logo universitaire carré',
-      },
-    },
-  ],
-  credential_configurations_supported: {
-    SD_JWT_VC_example_in_OpenID4VCI: {
-      format: 'dc+sd-jwt',
-      scope: 'SD_JWT_VC_example_in_OpenID4VCI',
-      credential_signing_alg_values_supported: ['ES256'],
-      cryptographic_binding_methods_supported: ['jwk'],
-      proof_types_supported: {
-        jwt: {
-          proof_signing_alg_values_supported: ['ES256'],
-          key_attestations_required: {
-            key_storage: ['iso_18045_moderate'],
-            user_authentication: ['iso_18045_moderate'],
-          },
+export const credential_metadata = {
+  transaction_data_types: {
+    'urn:eudi:sca:eu.europa.ec:payment:single:1': {
+      claims: [
+        {
+          path: ['transaction_id'],
+          mandatory: true,
         },
-      },
-      vct: 'SD_JWT_VC_example_in_OpenID4VCI',
-      credential_metadata: {
-        display: [
-          {
-            name: 'IdentityCredential',
-            locale: 'en-US',
-            logo: {
-              uri: 'https://university.example.edu/public/logo_credential.png',
-              alt_text: 'a square logo of a university credential',
-            },
-            description: 'A credential that signals the membership of a university',
-            background_color: '#12107c',
-            text_color: '#FFFFFF',
-          },
+        {
+          path: ['amount'],
+          mandatory: true,
+          value_type: 'iso_currency_amount',
+          display: [
+            { locale: 'en', name: 'amount' },
+            { locale: 'de', name: 'betrag' },
+          ],
+        },
+        {
+          path: ['amount_estimated'],
+          value_type: 'label_only',
+          display: [
+            { locale: 'en', name: 'amount is estimated' },
+            { locale: 'de', name: 'betrag ist geschätzt' },
+          ],
+        },
+        {
+          path: ['amount_earmarked'],
+          value_type: 'label_only',
+          display: [
+            { locale: 'en', name: 'amount earmarked immediately' },
+            { locale: 'de', name: 'betrag sofort reserviert' },
+          ],
+        },
+        {
+          path: ['payee', 'name'],
+          mandatory: true,
+          display: [
+            { locale: 'en', name: 'payee' },
+            { locale: 'de', name: 'empfänger' },
+          ],
+        },
+        {
+          path: ['payee', 'id'],
+          mandatory: true,
+        },
+        {
+          path: ['payee', 'logo'],
+          value_type: 'image',
+          display: [
+            { locale: 'en', name: 'payee logo' },
+            { locale: 'de', name: 'empfänger-logo' },
+          ],
+        },
+        {
+          path: ['payee', 'logo#integrity'],
+        },
+        {
+          path: ['payee', 'website'],
+          value_type: 'url',
+          display: [
+            { locale: 'en', name: 'website' },
+            { locale: 'de', name: 'webseite' },
+          ],
+        },
+        {
+          path: ['remittance_info'],
+          display: [
+            { locale: 'en', name: 'reference' },
+            { locale: 'de', name: 'verwendungszweck' },
+          ],
+        },
+        {
+          path: ['execution_date'],
+          value_type: 'iso_date',
+          display: [
+            { locale: 'en', name: 'execution date' },
+            { locale: 'de', name: 'ausführungsdatum' },
+          ],
+        },
+        {
+          path: ['date_time'],
+          value_type: 'iso_date_time',
+          display: [
+            { locale: 'en', name: 'initiated' },
+            { locale: 'de', name: 'eingeleitet' },
+          ],
+        },
+      ],
+      ui_labels: {
+        affirmative_action_label: [
+          { locale: 'en', value: 'Confirm Payment' },
+          { locale: 'de', value: 'Zahlung bestätigen' },
         ],
-        claims: [
-          {
-            path: ['given_name'],
-            display: [
-              {
-                name: 'Given Name',
-                locale: 'en-US',
-              },
-              {
-                name: 'Vorname',
-                locale: 'de-DE',
-              },
-            ],
-          },
-          {
-            path: ['family_name'],
-            display: [
-              {
-                name: 'Surname',
-                locale: 'en-US',
-              },
-              {
-                name: 'Nachname',
-                locale: 'de-DE',
-              },
-            ],
-          },
-          { path: ['email'] },
-          { path: ['phone_number'] },
-          {
-            path: ['address'],
-            display: [
-              {
-                name: 'Place of residence',
-                locale: 'en-US',
-              },
-              {
-                name: 'Wohnsitz',
-                locale: 'de-DE',
-              },
-            ],
-          },
-          { path: ['address', 'street_address'] },
-          { path: ['address', 'locality'] },
-          { path: ['address', 'region'] },
-          { path: ['address', 'country'] },
-          { path: ['birthdate'] },
-          { path: ['is_over_18'] },
-          { path: ['is_over_21'] },
-          { path: ['is_over_65'] },
+        denial_action_label: [
+          { locale: 'en', value: 'Cancel' },
+          { locale: 'de', value: 'Abbrechen' },
+        ],
+        transaction_title: [
+          { locale: 'en', value: 'Payment Confirmation' },
+          { locale: 'de', value: 'Zahlungsbestätigung' },
+        ],
+        security_hint: [
+          { locale: 'en', value: 'Verify that the payee name matches the intended recipient' },
+          { locale: 'de', value: 'Prüfen Sie, ob der Empfängername mit dem beabsichtigten Empfänger übereinstimmt' },
         ],
       },
     },
@@ -138,19 +113,24 @@ const oid4vciIssuerMetadata = {
 }
 
 suite('credential metadata', () => {
-  test('parse without credential metadata uri', () => {
-    const result = parseCredentialMetadataUri(oid4vciIssuerMetadata)
-    expect(result).toMatchObject(oid4vciIssuerMetadata)
-    expect(result.credential_metadata_uri).toBeUndefined()
+  test('parse valid credential metadata', () => {
+    const credentialMetadata = parseCredentialMetadata(credential_metadata)
+    expect(credentialMetadata).toMatchObject(credential_metadata)
   })
 
-  test('parse with credential metadata uri', () => {
-    const oid4vciIssuerMetadataWithCredentialMetadataUri = {
-      ...oid4vciIssuerMetadata,
-      credential_metadata_uri: 'https://example.org/metadata-uri',
-    }
-    const result = parseCredentialMetadataUri(oid4vciIssuerMetadataWithCredentialMetadataUri)
-    expect(result).toMatchObject(oid4vciIssuerMetadataWithCredentialMetadataUri)
-    expect(result.credential_metadata_uri).toStrictEqual('https://example.org/metadata-uri')
+  test('parse invalid credential metadata with incorrect key', () => {
+    expect(() =>
+      parseCredentialMetadata({
+        transaction_data_types: {
+          'invalid:urn:key': credential_metadata.transaction_data_types['urn:eudi:sca:eu.europa.ec:payment:single:1'],
+        },
+      })
+    ).toThrow(ZodError)
+  })
+
+  test('parse invalid credential metadata with incorrect value_type', () => {
+    const invalidCm = credential_metadata
+    invalidCm.transaction_data_types['urn:eudi:sca:eu.europa.ec:payment:single:1'].claims[0].value_type = 'invalid'
+    expect(() => parseCredentialMetadata(invalidCm)).toThrow(ZodError)
   })
 })
