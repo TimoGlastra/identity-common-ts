@@ -106,19 +106,13 @@ const validateJwt = async (jwt: string, credentialMetadataUri: string, verifier:
   const payload = z
     .object({
       iss: z.string(),
-
       sub: z.string().min(1, { message: 'sub must be a non-empty credential type identifier' }),
-
       format: z.enum(['dc+sd-jwt', 'mso_mdoc'], {
         message: 'format must be a valid OID4VCI credential format identifier',
       }),
-
       iat: z.number().int().positive({ message: 'iat must be a positive Unix timestamp' }),
-
       exp: z.number().int().positive({ message: 'exp must be a positive Unix timestamp' }),
-
       credential_metadata_uri: z.url({ message: 'credential_metadata_uri must be a valid URL' }),
-
       credential_metadata: zCredentialIssuerMetadataSchema,
     })
     .refine((data) => data.exp > data.iat, { message: 'exp must be after iat', path: ['exp'] })
