@@ -151,6 +151,142 @@ const sigT = getSigningTime() // "2025-03-23T14:30:00Z"
 | **B-LT** | Long-term validation | B-T + xVals, rVals |
 | **B-LTA** | Archive timestamps | B-LT + arcTst |
 
+### Profile Validation
+
+```typescript
+import { validateProfile, detectProfiles, JAdESProfile, decode } from '@owf/eudi-jades'
+
+const { header, unprotectedHeader } = decode(jws)
+
+// Validate against a specific profile
+const result = validateProfile(header, JAdESProfile.B_T, unprotectedHeader)
+if (!result.valid) {
+  console.log('Missing requirements:', result.missing)
+}
+
+// Detect all satisfied profiles
+const profiles = detectProfiles(header, unprotectedHeader)
+// e.g., [JAdESProfile.B_T, JAdESProfile.B_B]
+```
+
+## Integration with SD-JWT-VC
+
+This package is designed to work alongside existing JWT/JWS verification pipelines. It validates JAdES-specific requirements **without performing cryptographic verification**, allowing you to layer JAdES compliance on top of your existing verification logic.
+
+### Usage with @sd-jwt/sd-jwt-vc
+
+```typescript
+import { SDJwtVcInstance } from '@sd-jwt/sd-jwt-vc'
+import { 
+  decode, 
+  validateProfile, 
+  detectProfiles, 
+  JAdESProfile,
+  type ProtectedHeaderParams 
+} from '@owf/eudi-jades'
+
+/**
+ * Verify an SD-JWT-VC with JAdES compliance validation.
+ * 
+ * Responsibilities:
+ * - SD-JWT-VC: signature verification, disclosure handling, holder binding
+ * - eudi-jades: JAdES header validation, profile compliance
+ * - Status list: credential revocation (handled separately)
+ */
+async function verifyJAdESCompliantCredential(
+  credential: string,
+  requiredProfile: JAdESProfile = JAdESProfile.B_B
+) {
+  // 1. Extract JWT part from SD-JWT (before disclosures)
+  const jwtPart = credential.split('~')[0]
+  
+  // 2. JAdES compliance validation (no crypto - just structure/header checks)
+  const decoded = decode(jwtPart)
+  
+  // Validate against required profile
+  const profileResult = validateProfile(
+    decoded.header,
+    requiredProfile,
+    decoded.unprotectedHeader
+  )
+  
+  if (!profileResult.valid) {
+    throw new Error(
+      `JAdES ${requiredProfile} profile not satisfied. Missing: ${profileResult.missing?.join(', ')}`
+    )
+  }
+  
+  // 3. SD-JWT-VC verification (signature, disclosures, holder binding)
+  const sdJwtVc = new SDJwtVcInstance({
+    hasher: yourHasher,
+    verifier: yourVerifier,
+    // ... other config
+  })
+  
+  const sdJwtResult = await sdJwtVc.verify(credential, {
+    // verification options
+  })
+  
+  // 4. Return combined result
+  return {
+    ...sdJwtResult,
+    jadesProfile: requiredProfile,
+    satisfiedProfiles: detectProfiles(decoded.header, decoded.unprotectedHeader),
+    signingTime: decoded.header.sigT,
+  }
+}
+
+// Usage
+const result = await verifyJAdESCompliantCredential(
+  sdJwtCredential,
+  JAdESProfile.B_T  // Require timestamp
+)
+
+console.log('Payload:', result.payload)
+console.log('JAdES Profile:', result.jadesProfile)
+console.log('Signing Time:', result.signingTime)
+```
+
+### Extracting JAdES Metadata
+
+```typescript
+import { decode, getSigningTime } from '@owf/eudi-jades'
+
+// Decode and inspect JAdES-specific headers
+const jwtPart = sdJwtCredential.split('~')[0]
+const { header, payload, unprotectedHeader } = decode(jwtPart)
+
+// Access JAdES header parameters
+console.log('Algorithm:', header.alg)
+console.log('Signing Time:', header.sigT)
+console.log('Certificate Chain:', header.x5c)
+console.log('Certificate Thumbprint:', header['x5t#S256'])
+
+// Check for timestamp tokens (B-T profile)
+if (unprotectedHeader?.etsiU) {
+  const sigTst = unprotectedHeader.etsiU.find(e => 'sigTst' in e)
+  if (sigTst) {
+    console.log('Has signature timestamp')
+  }
+}
+```
+
+### Why Separate Concerns?
+
+| Concern | Package | Responsibility |
+|---------|---------|----------------|
+| **Signature Crypto** | @sd-jwt/sd-jwt-vc | ECDSA/RSA verification |
+| **Selective Disclosure** | @sd-jwt/sd-jwt-vc | Disclosure handling |
+| **Holder Binding** | @sd-jwt/sd-jwt-vc | Key binding JWT |
+| **JAdES Compliance** | @owf/eudi-jades | Header validation, profile checks |
+| **Credential Status** | @owf/token-status-list | Revocation checking |
+
+This separation allows:
+
+- Using your existing verification infrastructure
+- Adding JAdES compliance without changing crypto implementation
+- Flexible composition based on your requirements
+
 ## Platform Support
 
 This library is **platform agnostic** and works in:
