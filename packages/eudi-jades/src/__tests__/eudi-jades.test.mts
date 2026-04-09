@@ -8,6 +8,7 @@ import {
   generateX5tS256,
   getSigningTime,
   type SignAlg,
+  type UnprotectedHeaderParams,
   validateProfile,
   verify,
   verifyCompact,
@@ -535,7 +536,7 @@ describe('JAdES Profile Validation', () => {
     }
     const unprotectedHeader = {
       etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }],
-    }
+    } as UnprotectedHeaderParams
 
     const result = validateProfile(header, JAdESProfile.B_LT, unprotectedHeader)
     expect(result.valid).toBe(true)
@@ -549,7 +550,7 @@ describe('JAdES Profile Validation', () => {
     }
     const unprotectedHeader = {
       etsiU: [{ sigTst: { tstTokens: [] } }, { rVals: {} }],
-    }
+    } as UnprotectedHeaderParams
 
     const result = validateProfile(header, JAdESProfile.B_LT, unprotectedHeader)
     expect(result.valid).toBe(false)
@@ -564,7 +565,7 @@ describe('JAdES Profile Validation', () => {
     }
     const unprotectedHeader = {
       etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }, { arcTst: { tstTokens: [] } }],
-    }
+    } as UnprotectedHeaderParams
 
     const result = validateProfile(header, JAdESProfile.B_LTA, unprotectedHeader)
     expect(result.valid).toBe(true)
@@ -578,7 +579,7 @@ describe('JAdES Profile Validation', () => {
     }
     const unprotectedHeader = {
       etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }],
-    }
+    } as UnprotectedHeaderParams
 
     const result = validateProfile(header, JAdESProfile.B_LTA, unprotectedHeader)
     expect(result.valid).toBe(false)
@@ -593,7 +594,7 @@ describe('JAdES Profile Validation', () => {
     }
     const unprotectedHeader = {
       etsiU: [{ sigTst: { tstTokens: [] } }, { xVals: [] }, { rVals: {} }],
-    }
+    } as UnprotectedHeaderParams
 
     const profiles = detectProfiles(header, unprotectedHeader)
     expect(profiles).toContain(JAdESProfile.B_B)
