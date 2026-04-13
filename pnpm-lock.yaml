@@ -88,6 +88,18 @@ importers:
         specifier: ^14.0.12
         version: 14.0.12
 
+  packages/eudi-wrprc:
+    dependencies:
+      '@owf/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@owf/identity-common':
+        specifier: workspace:*
+        version: link:../identity-common
+      zod:
+        specifier: ^3.25.42
+        version: 3.25.76
+
   packages/identity-common: {}
 
   packages/token-status-list:
@@ -1927,6 +1939,9 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
@@ -3747,5 +3762,7 @@ snapshots:
   zod-validation-error@5.0.0(zod@4.3.6):
     dependencies:
       zod: 4.3.6
+
+  zod@3.25.76: {}
 
   zod@4.3.6: {}
