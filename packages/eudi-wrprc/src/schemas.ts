@@ -20,7 +20,7 @@ export const MultiLangStringSchema = z.object({
   /** Language code per BCP47/RFC 5646 */
   lang: z.string().min(2),
   /** Localized string value */
-  value: z.string().min(1),
+  content: z.string().min(1),
 })
 
 // ============================================================================
