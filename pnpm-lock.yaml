@@ -69,8 +69,8 @@ importers:
   packages/eudi-sca:
     dependencies:
       '@openid4vc/openid4vci':
-        specifier: 0.5.0-alpha-20260408113505
-        version: 0.5.0-alpha-20260408113505
+        specifier: 0.5.0-alpha-20260415063740
+        version: 0.5.0-alpha-20260415063740
       '@owf/crypto':
         specifier: 'workspace:'
         version: link:../crypto
@@ -550,14 +550,14 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@openid4vc/oauth2@0.5.0-alpha-20260408113505':
-    resolution: {integrity: sha512-YwBYSN7xyPdqfze82CgxHpYmlDW5Cfge4c/p4tFTm+YJVQulHPTWL8EwDbOr1MEYZ1tFL/a7zXMemwlIpdQlbQ==}
+  '@openid4vc/oauth2@0.5.0-alpha-20260415063740':
+    resolution: {integrity: sha512-3q1JEImyuGFkWkAdq3/97LRtn4syq+Fk2oXTvqLcpHc06BYhWsA4Mk4imsm3Il2KBVa/wbzjhUD51RlhKlrxOQ==}
 
-  '@openid4vc/openid4vci@0.5.0-alpha-20260408113505':
-    resolution: {integrity: sha512-vg/SdWocVcxSVhcVgEXD4Ev9sXX/Aw2IG0/SdV5ayqNeDUEVfOqx+SXAPqvsUAgMxoZO8kd2xhKFQCRNYHG8kA==}
+  '@openid4vc/openid4vci@0.5.0-alpha-20260415063740':
+    resolution: {integrity: sha512-Mw/JnK3RegLKbSfAwltFkWOzZlPRjMji56pUPpQn1qQkv2sZjR1Io1VE5wueYtFBzljyn1kd+pvGglP/d0r/8Q==}
 
-  '@openid4vc/utils@0.5.0-alpha-20260408113505':
-    resolution: {integrity: sha512-+24Dxr+j8XHKGRjWjbCN4cR1kWOAYldQOZyT60dSH09ogfLEK2GIAwPcsb47aAwoDStvS/LLS/yqhzEhyfF3JA==}
+  '@openid4vc/utils@0.5.0-alpha-20260415063740':
+    resolution: {integrity: sha512-r778UVTwdYy+IAUH1ktx126ZiSEHRqSNzg0FjssD+4w5O/Rr7prLHkAQTnPpGz8FXMinLivmn3I+SYohngElnA==}
 
   '@owf/mdoc@0.6.0':
     resolution: {integrity: sha512-vJL62hzjcSweBjDD9eRUH1RIMSzZUtHKjVFMMo50oHPLO9ZVZbQABFe9IFoa5AgXkwfv27HjnFv/eRbkOrlsUA==}
@@ -2390,18 +2390,18 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@openid4vc/oauth2@0.5.0-alpha-20260408113505':
+  '@openid4vc/oauth2@0.5.0-alpha-20260415063740':
     dependencies:
-      '@openid4vc/utils': 0.5.0-alpha-20260408113505
+      '@openid4vc/utils': 0.5.0-alpha-20260415063740
       zod: 4.3.6
 
-  '@openid4vc/openid4vci@0.5.0-alpha-20260408113505':
+  '@openid4vc/openid4vci@0.5.0-alpha-20260415063740':
     dependencies:
-      '@openid4vc/oauth2': 0.5.0-alpha-20260408113505
-      '@openid4vc/utils': 0.5.0-alpha-20260408113505
+      '@openid4vc/oauth2': 0.5.0-alpha-20260415063740
+      '@openid4vc/utils': 0.5.0-alpha-20260415063740
       zod: 4.3.6
 
-  '@openid4vc/utils@0.5.0-alpha-20260408113505':
+  '@openid4vc/utils@0.5.0-alpha-20260415063740':
     dependencies:
       buffer: 6.0.3
       zod: 4.3.6
