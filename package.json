@@ -31,8 +31,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "markdownlint-cli2": "^0.22.0",
-    "tsdown": "0.21.7",
-    "typescript": "^6.0.2",
+    "tsdown": "0.21.9",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.4"
   },
   "engines": {
