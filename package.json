@@ -27,7 +27,7 @@
     "@owf/crypto": "workspace:*",
     "@owf/identity-common": "workspace:*",
     "@owf/token-status-list": "workspace:*",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.6.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "markdownlint-cli2": "^0.22.0",
