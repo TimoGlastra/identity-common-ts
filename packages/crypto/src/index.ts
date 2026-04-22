@@ -11,5 +11,6 @@ export {
   getVerifier,
 } from './crypto'
 export { CryptoException } from './crypto-exception'
-export { hasher, sha256, sha384, sha512 } from './hash'
+export type { IntegrityAlgorithm } from './hash'
+export { hasher, integrity, sha256, sha384, sha512 } from './hash'
 export { base64DerToPem, parseCertificate, parseCertificateChain, pemToDer } from './pem'

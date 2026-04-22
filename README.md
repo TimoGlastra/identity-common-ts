@@ -61,6 +61,7 @@ Tools specific to the [European Digital Identity (EUDI) Wallet](https://ec.europ
 |---------|-------------|--------|
 | [`@owf/eudi-lote`](./packages/eudi-lote) | ETSI TS 119 602 Lists of Trusted Entities (LoTE) | ✅ Available |
 | [`@owf/eudi-wrprc`](./packages/eudi-wrprc) | ETSI TS 119 475 Wallet-Relying Party Registration Certificates | ✅ Available |
+| [`@owf/eudi-attestation-schema`](./packages/eudi-attestation-schema) | TS11 Catalogue of Attestations SchemaMeta | ✅ Available |
 | `@owf/eudi-certificates` | Registration and access certificate verification | 📋 Planned |
 | `@owf/eudi-sca` | TS12 Strong Customer Authentication Payments according to the latest to-be-added ARF |  In Progess |
 
@@ -129,6 +130,18 @@ npm install @owf/eudi-wrprc
 ```
 
 📖 [View package documentation](./packages/eudi-wrprc/README.md)
+
+### @owf/eudi-attestation-schema
+
+[![@owf/eudi-attestation-schema version](https://img.shields.io/npm/v/@owf/eudi-attestation-schema)](https://npmjs.com/package/@owf/eudi-attestation-schema)
+
+SDK for creating, signing, and validating attestation schema metadata (SchemaMeta) per the EUDI TS11 Catalogue of Attestations specification.
+
+```bash
+npm install @owf/eudi-attestation-schema
+```
+
+📖 [View package documentation](./packages/eudi-attestation-schema/README.md)
 
 ---
 
