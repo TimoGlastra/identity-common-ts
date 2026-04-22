@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { hasher, sha256, sha384, sha512 } from '../hash'
+import { hasher, integrity, sha256, sha384, sha512 } from '../hash'
 
 describe('hash', () => {
   describe('sha256', () => {
@@ -72,6 +72,42 @@ describe('hash', () => {
 
     it('should throw for unsupported algorithm', () => {
       expect(() => hasher('hello', 'md5')).toThrow('Unsupported algorithm: md5')
+    })
+  })
+
+  describe('integrity', () => {
+    it('should produce a valid SRI string with sha256 by default', () => {
+      const result = integrity('hello world')
+      expect(result).toMatch(/^sha256-[A-Za-z0-9+/]+=*$/)
+    })
+
+    it('should produce known sha256 SRI for "hello world"', () => {
+      // Known SHA-256 of "hello world" in base64
+      expect(integrity('hello world')).toBe('sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=')
+    })
+
+    it('should support sha384', () => {
+      const result = integrity('hello world', 'sha384')
+      expect(result).toMatch(/^sha384-/)
+    })
+
+    it('should support sha512', () => {
+      const result = integrity('hello world', 'sha512')
+      expect(result).toMatch(/^sha512-/)
+    })
+
+    it('should produce consistent results', () => {
+      expect(integrity('test data')).toBe(integrity('test data'))
+    })
+
+    it('should produce different results for different inputs', () => {
+      expect(integrity('hello')).not.toBe(integrity('world'))
+    })
+
+    it('should accept ArrayBuffer input', () => {
+      const encoder = new TextEncoder()
+      const buf = encoder.encode('hello world').buffer as ArrayBuffer
+      expect(integrity(buf)).toBe('sha256-uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=')
     })
   })
 })
