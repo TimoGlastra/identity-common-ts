@@ -6,13 +6,7 @@
  */
 
 import { ES256 } from '@owf/crypto'
-import {
-  schemaMeta,
-  schemaURI,
-  signSchemaMeta,
-  trustAuthority,
-  verifySchemaMeta,
-} from '@owf/eudi-attestation-schema'
+import { schemaMeta, schemaURI, signSchemaMeta, trustAuthority, verifySchemaMeta } from '@owf/eudi-attestation-schema'
 
 // ---------------------------------------------------------------------------
 // 1. Key material — in production, load from a vault / HSM
@@ -60,23 +54,10 @@ async function main() {
     .addFormat('dc+sd-jwt')
     .addFormat('mso_mdoc')
     .addSchemaURI(
-      schemaURI()
-        .format('dc+sd-jwt')
-        .uri('https://catalog.example.com/schemas/pid/sd-jwt/1.0.0.json')
-        .build(),
+      schemaURI().format('dc+sd-jwt').uri('https://catalog.example.com/schemas/pid/sd-jwt/1.0.0.json').build()
     )
-    .addSchemaURI(
-      schemaURI()
-        .format('mso_mdoc')
-        .uri('https://catalog.example.com/schemas/pid/mdoc/1.0.0.json')
-        .build(),
-    )
-    .addTrustAuthority(
-      trustAuthority()
-        .frameworkType('etsi_tl')
-        .value('https://trust-list.example.eu/tl.xml')
-        .build(),
-    )
+    .addSchemaURI(schemaURI().format('mso_mdoc').uri('https://catalog.example.com/schemas/pid/mdoc/1.0.0.json').build())
+    .addTrustAuthority(trustAuthority().frameworkType('etsi_tl').value('https://trust-list.example.eu/tl.xml').build())
     .build()
 
   console.log('SchemaMeta:', JSON.stringify(meta, null, 2))

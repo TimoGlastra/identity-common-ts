@@ -107,7 +107,7 @@ describe('signSchemaMeta', () => {
       keyId: 'test-key-1',
       signer,
       certificates: [TEST_CERT],
-    })    
+    })
 
     expect(signed.payload).toEqual(meta)
   })
