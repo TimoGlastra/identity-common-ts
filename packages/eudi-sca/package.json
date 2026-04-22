@@ -32,10 +32,12 @@
   },
   "dependencies": {
     "@openid4vc/openid4vci": "0.5.0-alpha-20260415063740",
+    "@openid4vc/openid4vp": "^0.4.6",
     "@owf/crypto": "workspace:",
     "@owf/identity-common": "workspace:",
     "@owf/mdoc": "^0.6.0",
     "@sd-jwt/core": "^0.19.0",
+    "@sd-jwt/types": "^0.19.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

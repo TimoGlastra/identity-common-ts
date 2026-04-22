@@ -1,3 +1,4 @@
+export { base64url, Hasher } from '@owf/identity-common'
 export {
   type CredentialMetadata,
   type CredentialMetadataDisplay,
@@ -6,6 +7,8 @@ export {
   ValueType,
 } from './credentialMetadata'
 export { parseCredentialMetadataUri } from './issuerMetadata'
+export { createMdocDeviceResponse } from './mdoc'
+export { createKbJwt } from './sdJwt'
 export {
   matchTransactionDataToTransactionDataType,
   type PayloadWithDisplayInfo,
