@@ -99,6 +99,8 @@ From the root of the repository:
 | `pnpm style:fix` | Fix code style issues |
 | `pnpm md:check` | Check markdown files |
 | `pnpm md:fix` | Fix markdown issues |
+| `pnpm create-package <name> [--eudi]` | Scaffold a new package |
+| `pnpm npm:trust:bootstrap` | Configure npm trusted publishing for existing packages |
 
 ### Working on a Package
 
@@ -113,11 +115,18 @@ From the root of the repository:
 
 Follow these steps to add a new package to the monorepo:
 
-### 1. Create the Package Directory
+### 1. Scaffold the Package
+
+Prefer the package generator:
 
 ```bash
-mkdir -p packages/my-package/src
+pnpm create-package my-package
+pnpm create-package eudi-example --eudi
 ```
+
+This creates the package directory, `package.json`, `tsconfig.json`, `README.md`, and starter test files with the repository defaults.
+
+If you need to create a package manually, follow the steps below.
 
 ### 2. Create `package.json`
 
@@ -138,6 +147,7 @@ Create `packages/my-package/package.json`:
     "directory": "packages/my-package"
   },
   "publishConfig": {
+    "access": "public",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.mts",
     "exports": {
@@ -392,12 +402,25 @@ When adding a new package to the monorepo:
 
    You must be logged into npm (`npm login`) with an account that has publish access to the `@owf` scope.
 
-3. **Configure trusted publishing on npmjs.com:**
+3. **Configure trusted publishing once:**
+
+   Preferred: run the repository bootstrap script from the repo root:
+
+   ```bash
+   pnpm npm:trust:bootstrap
+   ```
+
+   This configures each published workspace package to trust the GitHub Actions release workflow (`release.yml`).
+
+   Alternatively, you can configure the package manually on npmjs.com:
+
    - Go to `https://www.npmjs.com/package/@owf/your-new-package/access`
    - In the "Trusted Publisher" section, configure:
      - **Organization**: `openwallet-foundation-labs`
      - **Repository**: `identity-common-ts`
      - **Workflow filename**: `release.yml`
+
+   `npm trust` only works after the package already exists on npm.
 
 4. **Future releases are automatic** - CI will handle all subsequent publishes via trusted publishing.
 

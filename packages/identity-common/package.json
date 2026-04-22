@@ -13,6 +13,7 @@
     "directory": "packages/identity-common"
   },
   "publishConfig": {
+    "access": "public",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.mts",
     "exports": {
