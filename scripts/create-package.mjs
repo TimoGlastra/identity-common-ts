@@ -56,6 +56,7 @@ const packageJson = {
     directory: `packages/${packageName}`,
   },
   publishConfig: {
+    access: 'public',
     module: './dist/index.mjs',
     types: './dist/index.d.mts',
     exports: {

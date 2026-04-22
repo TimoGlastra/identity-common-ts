@@ -11,12 +11,14 @@ jobs:
   release-stable:
     runs-on: ubuntu-24.04
     name: Release Stable
+    env:
+      NPM_CONFIG_PROVENANCE: "true"
     permissions:
       contents: write
       id-token: write # Needed for npm trusted publishing
       pull-requests: write
     outputs:
-      published: ${{ env.PUBLISHED == 'true' }}
+      published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v6
@@ -48,19 +50,21 @@ jobs:
 
       - name: Get current package version
         id: get_version
-        run: echo "CURRENT_PACKAGE_VERSION=$(node -p "require('./packages/identity-common/package.json').version")" >> $GITHUB_ENV
+        run: echo "current_package_version=$(node -p "require('./packages/identity-common/package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Create Github Release
         if: "startsWith(github.event.head_commit.message, 'chore(release): new version')"
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: v${{ env.CURRENT_PACKAGE_VERSION }}
+          tag_name: v${{ steps.get_version.outputs.current_package_version }}
 
   release-unstable:
     runs-on: ubuntu-24.04
     name: Release Unstable
     needs: release-stable
     if: always() && github.event_name == 'push' && needs.release-stable.outputs.published == 'false'
+    env:
+      NPM_CONFIG_PROVENANCE: "true"
     permissions:
       contents: write
       id-token: write # Needed for npm trusted publishing

@@ -17,6 +17,7 @@
     "build": "pnpm -r build",
     "test": "vitest",
     "create-package": "node scripts/create-package.mjs",
+    "npm:trust:bootstrap": "bash scripts/npm-trust-bootstrap.sh",
     "release": "pnpm build && pnpm changeset publish --no-git-tag 2>&1 | tee changeset-publish.log",
     "changeset-version": "pnpm changeset version && pnpm style:fix",
     "prepare": "husky"
