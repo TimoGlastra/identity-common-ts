@@ -16,10 +16,16 @@
   },
   "publishConfig": {
     "access": "public",
+    "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.mts",
     "exports": {
-      ".": "./dist/index.mjs",
+      ".": {
+        "types": "./dist/index.d.mts",
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.mjs"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -34,7 +40,7 @@
     "ts11"
   ],
   "scripts": {
-    "build": "tsdown src/index.ts --format esm --dts --sourcemap"
+    "build": "tsdown src/index.ts --format esm,cjs --dts --sourcemap"
   },
   "dependencies": {
     "@owf/crypto": "workspace:*",
