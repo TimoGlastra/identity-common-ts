@@ -23,7 +23,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.8",
+    "@biomejs/biome": "2.4.13",
     "@changesets/cli": "^2.31.0",
     "@owf/crypto": "workspace:*",
     "@owf/identity-common": "workspace:*",
@@ -33,7 +33,7 @@
     "lint-staged": "^16.4.0",
     "markdownlint-cli2": "^0.22.0",
     "tsdown": "0.21.9",
-    "typescript": "^6.0.3",
+    "typescript": "catalog:",
     "vitest": "^4.1.4",
     "tsx": "^4.21.0"
   },
