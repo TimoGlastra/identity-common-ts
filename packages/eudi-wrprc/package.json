@@ -44,7 +44,7 @@
   "dependencies": {
     "@owf/crypto": "workspace:*",
     "@owf/identity-common": "workspace:*",
-    "zod": "^3.25.42"
+    "zod": "^4.4.1"
   },
   "devDependencies": {}
 }

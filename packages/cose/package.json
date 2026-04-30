@@ -33,7 +33,7 @@
   "dependencies": {
     "@owf/identity-common": "workspace:*",
     "cbor-x": "^1.6.4",
-    "zod": "^4.3.6",
+    "zod": "^4.4.1",
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
