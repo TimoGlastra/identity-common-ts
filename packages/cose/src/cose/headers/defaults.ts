@@ -1,4 +1,9 @@
-export enum Header {
+/**
+ *
+ * Registered CWT header keys
+ *
+ */
+export enum RegisteredCwtHeaderClaimKey {
   Algorithm = 1,
   Critical = 2,
   ContentType = 3,

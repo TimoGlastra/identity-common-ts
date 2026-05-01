@@ -31,9 +31,11 @@
     "build": "tsdown src/index.ts --format esm,cjs --dts --sourcemap"
   },
   "dependencies": {
+    "@owf/cose": "workspace:*",
+    "@owf/identity-common": "workspace:*",
     "cbor-x": "^1.6.4",
     "pako": "^2.1.0",
-    "@owf/identity-common": "workspace:*"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/pako": "^2.0.4"

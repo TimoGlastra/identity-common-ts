@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { Header, SignatureAlgorithm } from '../../src/cose/headers/defaults'
+import { RegisteredCwtHeaderClaimKey, SignatureAlgorithm } from '../../src/cose/headers/defaults'
 import { Sign1 } from '../../src/cose/sign1'
 import { cborDecode } from '../cbor'
 import { CoseKey, ProtectedHeaders, UnprotectedHeaders } from '../cose'
@@ -15,10 +15,12 @@ describe('sign1', () => {
   test('parse', async () => {
     const sign1 = Sign1.decode(cbor)
 
-    expect(sign1.unprotectedHeaders.headers?.has(Header.Algorithm)).toBeTruthy()
-    expect(sign1.unprotectedHeaders.headers?.has(Header.KeyId)).toBeTruthy()
+    expect(sign1.unprotectedHeaders.headers?.has(RegisteredCwtHeaderClaimKey.Algorithm)).toBeTruthy()
+    expect(sign1.unprotectedHeaders.headers?.has(RegisteredCwtHeaderClaimKey.KeyId)).toBeTruthy()
     expect(sign1.payload).toBeDefined()
     expect(sign1.signature).toBeDefined()
+
+    expect(sign1.encode().entries()).toStrictEqual(cbor.entries())
   })
 
   ;[sign1TestVector01, sign1TestVector02].map(async (testVector) => {
@@ -26,10 +28,10 @@ describe('sign1', () => {
       const key = CoseKey.fromJwk(testVector.key)
 
       const sign1 = Sign1.fromDecodedStructure({
-        protected: ProtectedHeaders.fromDecodedStructure(
+        protectedHeaders: ProtectedHeaders.fromDecodedStructure(
           cborDecode(hex.decode(testVector['sign1::sign'].protectedHeaders.cborHex))
         ),
-        unprotected: UnprotectedHeaders.decode(hex.decode(testVector['sign1::sign'].unprotectedHeaders.cborHex)),
+        unprotectedHeaders: UnprotectedHeaders.decode(hex.decode(testVector['sign1::sign'].unprotectedHeaders.cborHex)),
         payload: hex.decode(testVector['sign1::sign'].payload),
         signature: cborDecode<Sign1>(hex.decode(testVector['sign1::sign'].expectedOutput.cborHex)).signature,
       })
@@ -43,19 +45,19 @@ describe('sign1', () => {
       const isValid = await sign1.verifySignature({ key }, sign1Context)
       expect(isValid).toBeTruthy()
 
-      const sign1Resigned = await Sign1.create(
-        {
-          protectedHeaders: sign1.protectedHeaders,
-          unprotectedHeaders: sign1.unprotectedHeaders,
-          payload: sign1.payload,
-          signingKey: key,
-          externalAad: sign1.externalAad,
-          algorithm: SignatureAlgorithm.ES256,
-        },
+      const sign1Resigned = Sign1.create({
+        protectedHeaders: sign1.protectedHeaders,
+        unprotectedHeaders: sign1.unprotectedHeaders,
+        payload: sign1.payload,
+        externalAad: sign1.externalAad,
+      })
+
+      const sign1ResignedWithSignature = await sign1Resigned.sign(
+        { signingKey: key, algorithm: SignatureAlgorithm.ES256 },
         sign1Context
       )
 
-      const isValidAfterResign = await sign1Resigned.verifySignature({ key }, sign1Context)
+      const isValidAfterResign = await sign1ResignedWithSignature.verifySignature({ key }, sign1Context)
       expect(isValidAfterResign).toBeTruthy()
     })
   })

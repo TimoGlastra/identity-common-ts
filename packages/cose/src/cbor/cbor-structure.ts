@@ -1,5 +1,6 @@
 // biome-ignore-all lint: @biomejs/biome seems to change the `new this(...)` calls into `new CborStructure(...)` which seems to cause a bug for this specific use case. We cannot alias to `thiz` or disable a specific rule
 
+import { Tag } from 'cbor-x'
 import { z } from 'zod'
 import {
   decodeStructureWithErrorHandling,
@@ -25,6 +26,7 @@ export type CborStructureStaticThis<T extends AnyCborStructure> = {
 
 export class CborStructure<EncodedStructure = unknown, DecodedStructure = EncodedStructure> {
   protected structure: DecodedStructure
+  protected _tag: number | undefined
 
   public constructor(structure: DecodedStructure) {
     this.structure = structure
@@ -63,8 +65,9 @@ export class CborStructure<EncodedStructure = unknown, DecodedStructure = Encode
    */
   public encode(options?: CborEncodeOptions): Uint8Array {
     const encodedStructure = options?.asDataItem ? DataItem.fromData(this.encodedStructure) : this.encodedStructure
+    const tagged = this._tag ? new Tag(encodedStructure, this._tag) : encodedStructure
 
-    return cborEncode(encodedStructure)
+    return cborEncode(tagged)
   }
 
   /**

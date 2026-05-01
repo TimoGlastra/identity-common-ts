@@ -17,11 +17,6 @@ export const sign1Context: Sign1Context = {
 }
 
 export const mac0Context: Mac0Context = {
-  createEphemeralKey: async (_options: {
-    privateKey: Uint8Array
-    ephemeralPublicKey: Uint8Array
-    info: Uint8Array
-  }): Promise<Uint8Array> => new Uint8Array([1, 2, 3]),
   mac: async (_options: { toBeAuthenticated: Uint8Array; key: Uint8Array }): Promise<Uint8Array> =>
     new Uint8Array([4, 5, 6]),
 }

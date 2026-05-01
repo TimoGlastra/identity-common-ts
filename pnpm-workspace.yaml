@@ -3,4 +3,5 @@ packages:
 
 
 catalog:
+  zod: ^4.4.3
   typescript: ~6.0.2

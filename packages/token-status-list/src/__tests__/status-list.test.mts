@@ -212,7 +212,7 @@ describe('StatusList', () => {
       statuses[15] = 1
 
       const list = new StatusList(statuses, 1)
-      const encoded = list.encodeStatusList()
+      const encoded = list.encodeStatusListIntoByteArray()
 
       expect(encoded[0]).toBe(0xb9)
       expect(encoded[1]).toBe(0xa3)
