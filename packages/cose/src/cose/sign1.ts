@@ -1,30 +1,28 @@
+import { addExtension } from 'cbor-x'
 import z from 'zod'
 import {
   type AnyCborStructure,
-  addExtension,
   CborStructure,
   type CborStructureStaticThis,
   cborDecode,
   cborEncode,
   type EncodedStructureType,
-} from '../cbor/index.js'
-import { zUint8Array } from '../utils/zod.js'
-import { CoseCertificateNotFoundError, CoseInvalidAlgorithmError, CosePayloadMustBeDefinedError } from './error.js'
-import { Header, type SignatureAlgorithm } from './headers/defaults.js'
+} from '../cbor'
+import { zUint8Array } from '../utils/zod'
+import { CoseCertificateNotFoundError, CoseInvalidAlgorithmError, CosePayloadMustBeDefinedError } from './error'
 import {
   type ProtectedHeaderOptions,
   ProtectedHeaders,
   protectedHeadersEncodedStructure,
-} from './headers/protected-headers.js'
-import {
+  RegisteredCwtHeaderClaimKey,
+  type SignatureAlgorithm,
   type UnprotectedHeaderOptions,
   UnprotectedHeaders,
   unprotectedHeadersStructure,
-} from './headers/unprotected-headers.js'
-import { coseKeyToJwk } from './key/jwk.js'
-import type { CoseKey } from './key/key.js'
+} from './headers'
+import { type CoseKey, coseKeyToJwk } from './key'
 
-const sign1EncodedSchema = z.tuple([
+export const sign1EncodedSchema = z.tuple([
   // protected headers
   protectedHeadersEncodedStructure,
   // unprotected headers
@@ -35,9 +33,9 @@ const sign1EncodedSchema = z.tuple([
   zUint8Array,
 ])
 
-const sign1DecodedSchema = z.object({
-  protected: z.instanceof(ProtectedHeaders),
-  unprotected: z.instanceof(UnprotectedHeaders),
+export const sign1DecodedSchema = z.object({
+  protectedHeaders: z.instanceof(ProtectedHeaders),
+  unprotectedHeaders: z.instanceof(UnprotectedHeaders),
   payload: sign1EncodedSchema.def.items[2],
   signature: sign1EncodedSchema.def.items[3],
 })
@@ -58,30 +56,33 @@ export type Sign1Context = {
 export type Sign1Options = {
   protectedHeaders?: ProtectedHeaders | ProtectedHeaderOptions['protectedHeaders']
   unprotectedHeaders?: UnprotectedHeaders | UnprotectedHeaderOptions['unprotectedHeaders']
-  signingKey: CoseKey
-  algorithm?: SignatureAlgorithm
+  externalAad?: Uint8Array
 
   payload?: Uint8Array | null
   detachedPayload?: Uint8Array
-
-  externalAad?: Uint8Array
 }
 
 export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStructure> {
   public static tag = 18
+  protected override _tag = Sign1.tag
 
   public static override get encodingSchema() {
     return z.codec(sign1EncodedSchema, sign1DecodedSchema, {
-      encode: (decoded) =>
-        [
-          decoded.protected.encodedStructure,
-          decoded.unprotected.encodedStructure,
+      encode: (decoded) => {
+        if (decoded.signature.length === 0) {
+          throw new Error('Signature has not been set. Required for encoding the sign1 structure')
+        }
+
+        return [
+          decoded.protectedHeaders.encodedStructure,
+          decoded.unprotectedHeaders.encodedStructure,
           decoded.payload,
           decoded.signature,
-        ] satisfies Sign1EncodedStructure,
+        ] satisfies Sign1EncodedStructure
+      },
       decode: ([protectedHeaders, unprotected, payload, signature]) => ({
-        protected: ProtectedHeaders.fromEncodedStructure(protectedHeaders),
-        unprotected: UnprotectedHeaders.fromEncodedStructure(unprotected),
+        protectedHeaders: ProtectedHeaders.fromEncodedStructure(protectedHeaders),
+        unprotectedHeaders: UnprotectedHeaders.fromEncodedStructure(unprotected),
         payload,
         signature,
       }),
@@ -92,11 +93,11 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
   public externalAad?: Uint8Array
 
   public get protectedHeaders() {
-    return this.structure.protected
+    return this.structure.protectedHeaders
   }
 
   public get unprotectedHeaders() {
-    return this.structure.unprotected
+    return this.structure.unprotectedHeaders
   }
 
   public get payload() {
@@ -188,8 +189,8 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
 
   public get signatureAlgorithmName(): string {
     // FIXME: why are we looking at the unprotected header for the alg?
-    const algorithm = (this.protectedHeaders.headers?.get(Header.Algorithm) ??
-      this.unprotectedHeaders.headers?.get(Header.Algorithm)) as SignatureAlgorithm | undefined
+    const algorithm = (this.protectedHeaders.headers?.get(RegisteredCwtHeaderClaimKey.Algorithm) ??
+      this.unprotectedHeaders.headers?.get(RegisteredCwtHeaderClaimKey.Algorithm)) as SignatureAlgorithm | undefined
 
     if (!algorithm) {
       throw new CoseInvalidAlgorithmError()
@@ -207,8 +208,14 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
     // TODO: typed keys for headers
     // FIXME: why are we looking at unprotected header for x5c?
     const x5chain =
-      (this.protectedHeaders.headers?.get(Header.X5Chain) as Uint8Array | Uint8Array[] | undefined) ??
-      (this.unprotectedHeaders.headers?.get(Header.X5Chain) as Uint8Array | Uint8Array[] | undefined)
+      (this.protectedHeaders.headers?.get(RegisteredCwtHeaderClaimKey.X5Chain) as
+        | Uint8Array
+        | Uint8Array[]
+        | undefined) ??
+      (this.unprotectedHeaders.headers?.get(RegisteredCwtHeaderClaimKey.X5Chain) as
+        | Uint8Array
+        | Uint8Array[]
+        | undefined)
 
     if (!x5chain?.[0]) {
       return undefined
@@ -237,7 +244,7 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
     })
   }
 
-  public static async create(options: Sign1Options, ctx: Pick<Sign1Context, 'sign'>) {
+  public static create(options: Sign1Options) {
     const payload = options.payload ?? options.detachedPayload
     if (!payload) {
       throw new CosePayloadMustBeDefinedError()
@@ -250,6 +257,39 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
           ? ProtectedHeaders.fromDecodedStructure(options.protectedHeaders)
           : ProtectedHeaders.create({})
 
+    const unprotectedHeaders =
+      options.unprotectedHeaders instanceof UnprotectedHeaders
+        ? options.unprotectedHeaders
+        : options.unprotectedHeaders
+          ? UnprotectedHeaders.fromDecodedStructure(options.unprotectedHeaders)
+          : UnprotectedHeaders.create({})
+
+    const sign1 = new Sign1({
+      protectedHeaders,
+      unprotectedHeaders,
+      payload,
+      signature: new Uint8Array(),
+    })
+
+    sign1.externalAad = options.externalAad
+    sign1.detachedPayload = options.detachedPayload
+
+    return sign1
+  }
+
+  public async sign(
+    options: {
+      externalAad?: Uint8Array
+      signingKey: CoseKey
+      algorithm?: SignatureAlgorithm
+      detachedPayload?: Uint8Array
+    },
+    ctx: Pick<Sign1Context, 'sign'>
+  ) {
+    const payload = this.payload ?? options.detachedPayload
+    if (!payload) {
+      throw new CosePayloadMustBeDefinedError()
+    }
     const signatureAlgorithm = options.algorithm ?? options.signingKey.algorithm
 
     if (!signatureAlgorithm) {
@@ -258,32 +298,17 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
       )
     }
 
-    const signature = await ctx.sign({
+    this.structure.signature = await ctx.sign({
       toBeSigned: Sign1.toBeSigned({
         payload,
-        protectedHeaders,
+        protectedHeaders: this.protectedHeaders,
         externalAad: options.externalAad,
       }),
       key: options.signingKey,
       algorithm: signatureAlgorithm,
     })
 
-    const sign1 = Sign1.fromDecodedStructure({
-      payload: options.payload ?? null,
-      protected: protectedHeaders,
-      unprotected:
-        options.unprotectedHeaders instanceof UnprotectedHeaders
-          ? options.unprotectedHeaders
-          : options.unprotectedHeaders
-            ? UnprotectedHeaders.fromEncodedStructure(options.unprotectedHeaders)
-            : UnprotectedHeaders.create({}),
-      signature,
-    })
-
-    sign1.detachedPayload = options.detachedPayload
-    sign1.externalAad = options.externalAad
-
-    return sign1
+    return this
   }
 }
 

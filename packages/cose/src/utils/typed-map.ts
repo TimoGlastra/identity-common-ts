@@ -38,6 +38,14 @@ export class TypedMap<Schema extends Record<PropertyKey, any>, OptionalKeys exte
     return new TypedMap<Schema, OptionalKeys>(Array.from(map.entries()))
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: no explanation
+  public static fromObject<Schema extends Record<PropertyKey, any>, OptionalKeys extends keyof Schema = never>(
+    // biome-ignore lint/suspicious/noExplicitAny: no explanation
+    object: Record<string | number, any>
+  ) {
+    return new TypedMap<Schema, OptionalKeys>(Array.from(Object.entries(object)))
+  }
+
   /**
    * Type-safe get that returns the correct value type for each key.
    * Required keys return T, optional keys return T | undefined.

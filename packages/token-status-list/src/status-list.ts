@@ -9,8 +9,9 @@ export class StatusList {
   private _statusList: number[]
   private bitsPerStatus: BitsPerStatus
   private totalStatuses: number
+  public aggregationUri?: string
 
-  constructor(statusList: number[], bitsPerStatus: BitsPerStatus) {
+  constructor(statusList: number[], bitsPerStatus: BitsPerStatus, aggregationUri?: string) {
     if (![1, 2, 4, 8].includes(bitsPerStatus)) {
       throw new SLException('bitsPerStatus must be 1, 2, 4, or 8')
     }
@@ -22,6 +23,7 @@ export class StatusList {
     this._statusList = statusList
     this.bitsPerStatus = bitsPerStatus
     this.totalStatuses = statusList.length
+    this.aggregationUri = aggregationUri
   }
 
   /** Get the status list. */
@@ -52,23 +54,27 @@ export class StatusList {
 
   /** Compress the status list and return as raw bytes. */
   compressStatusListToBytes(): Uint8Array {
-    const byteArray = this.encodeStatusList()
+    const byteArray = this.encodeStatusListIntoByteArray()
     return deflate(byteArray, { level: 9 })
   }
 
   /** Decompress a raw byte array and return a new StatusList instance. */
-  static decompressStatusListFromBytes(compressed: Uint8Array, bitsPerStatus: BitsPerStatus): StatusList {
+  static decompressStatusListFromBytes(
+    compressed: Uint8Array,
+    bitsPerStatus: BitsPerStatus,
+    aggregationUri?: string
+  ): StatusList {
     try {
       const decompressed = inflate(compressed)
-      const statusList = StatusList.decodeStatusList(decompressed, bitsPerStatus)
-      return new StatusList(statusList, bitsPerStatus)
+      const statusList = StatusList.decodeStatusListFromByteArray(decompressed, bitsPerStatus)
+      return new StatusList(statusList, bitsPerStatus, aggregationUri)
     } catch (err: unknown) {
       throw new Error(`Decompression failed: ${err}`)
     }
   }
 
   /** Encode the status list into a byte array. */
-  public encodeStatusList(): Uint8Array {
+  public encodeStatusListIntoByteArray(): Uint8Array {
     const numBits = this.bitsPerStatus
     const numBytes = Math.ceil((this.totalStatuses * numBits) / 8)
     const byteArray = new Uint8Array(numBytes)
@@ -95,7 +101,7 @@ export class StatusList {
   }
 
   /** Decode the byte array into a status list. */
-  private static decodeStatusList(byteArray: Uint8Array, bitsPerStatus: BitsPerStatus): number[] {
+  private static decodeStatusListFromByteArray(byteArray: Uint8Array, bitsPerStatus: BitsPerStatus): number[] {
     const numBits = bitsPerStatus
     const totalStatuses = (byteArray.length * 8) / numBits
     const statusList = new Array<number>(totalStatuses)

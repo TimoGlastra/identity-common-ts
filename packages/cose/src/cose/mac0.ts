@@ -7,27 +7,30 @@ import {
   cborDecode,
   cborEncode,
   type EncodedStructureType,
-} from '../cbor/index.js'
-
-import { zUint8Array } from '../utils/zod.js'
-import { CoseInvalidAlgorithmError, CosePayloadMustBeDefinedError } from './error.js'
-import { Header, type MacAlgorithm } from './headers/defaults.js'
+} from '../cbor'
+import { zUint8Array } from '../utils/zod'
+import { CoseInvalidAlgorithmError, CosePayloadMustBeDefinedError } from './error'
+import { type MacAlgorithm, RegisteredCwtHeaderClaimKey } from './headers/defaults'
 import {
   type ProtectedHeaderOptions,
   ProtectedHeaders,
   type ProtectedHeadersEncodedStructure,
-} from './headers/protected-headers.js'
+} from './headers/protected-headers'
 import {
   type UnprotectedHeaderOptions,
   UnprotectedHeaders,
   type UnprotectedHeadersStructure,
-} from './headers/unprotected-headers.js'
-import { coseKeyToJwk } from './key/jwk.js'
-import type { CoseKey } from './key/key.js'
+} from './headers/unprotected-headers'
+import { coseKeyToJwk } from './key/jwk'
 
-const mac0EncodedSchema = z.tuple([zUint8Array, z.map(z.unknown(), z.unknown()), zUint8Array.nullable(), zUint8Array])
+export const mac0EncodedSchema = z.tuple([
+  zUint8Array,
+  z.map(z.unknown(), z.unknown()),
+  zUint8Array.nullable(),
+  zUint8Array,
+])
 
-const mac0DecodedSchema = z.object({
+export const mac0DecodedSchema = z.object({
   protectedHeaders: z.instanceof(ProtectedHeaders),
   unprotectedHeaders: z.instanceof(UnprotectedHeaders),
   payload: zUint8Array.nullable(),
@@ -38,32 +41,35 @@ export type Mac0EncodedStructure = z.infer<typeof mac0EncodedSchema>
 export type Mac0DecodedStructure = z.infer<typeof mac0DecodedSchema>
 
 export type Mac0Context = {
-  createEphemeralKey: (options: {
-    privateKey: Uint8Array
-    ephemeralPublicKey: Uint8Array
-    info: Uint8Array
-  }) => Promise<Uint8Array>
   mac: (options: { toBeAuthenticated: Uint8Array; key: Uint8Array }) => Promise<Uint8Array>
 }
 
 export type Mac0Options = {
-  protectedHeaders: ProtectedHeaders | ProtectedHeaderOptions['protectedHeaders']
-  unprotectedHeaders: UnprotectedHeaders | UnprotectedHeaderOptions['unprotectedHeaders']
+  protectedHeaders?: ProtectedHeaders | ProtectedHeaderOptions['protectedHeaders']
+  unprotectedHeaders?: UnprotectedHeaders | UnprotectedHeaderOptions['unprotectedHeaders']
   externalAad?: Uint8Array
 
   payload?: Uint8Array | null
   detachedPayload?: Uint8Array
-
-  privateKey: CoseKey
-  ephemeralKey: CoseKey
-  info: Uint8Array
 }
 
 export class Mac0 extends CborStructure<Mac0EncodedStructure, Mac0DecodedStructure> {
   public static tag = 17
+  protected override _tag = Mac0.tag
 
   public static override get encodingSchema() {
     return z.codec(mac0EncodedSchema, mac0DecodedSchema, {
+      encode: ({ protectedHeaders, unprotectedHeaders, payload, tag }) => {
+        if (tag.length === 0) {
+          throw new Error('Tag has not been set. Required for encoding the mac0 structure')
+        }
+        return [
+          protectedHeaders.encodedStructure,
+          unprotectedHeaders.encodedStructure,
+          payload,
+          tag,
+        ] satisfies Mac0EncodedStructure
+      },
       decode: ([protectedHeadersBytes, unprotectedHeadersMap, payload, tag]) => ({
         protectedHeaders: ProtectedHeaders.fromEncodedStructure(
           protectedHeadersBytes as ProtectedHeadersEncodedStructure
@@ -74,13 +80,6 @@ export class Mac0 extends CborStructure<Mac0EncodedStructure, Mac0DecodedStructu
         payload,
         tag,
       }),
-      encode: ({ protectedHeaders, unprotectedHeaders, payload, tag }) =>
-        [
-          protectedHeaders.encodedStructure,
-          unprotectedHeaders.encodedStructure,
-          payload,
-          tag,
-        ] satisfies Mac0EncodedStructure,
     })
   }
 
@@ -148,8 +147,8 @@ export class Mac0 extends CborStructure<Mac0EncodedStructure, Mac0DecodedStructu
   }
 
   public get signatureAlgorithmName(): MacAlgorithm {
-    const algorithm = (this.protectedHeaders.headers?.get(Header.Algorithm) ??
-      this.unprotectedHeaders.headers?.get(Header.Algorithm)) as MacAlgorithm | undefined
+    const algorithm = (this.protectedHeaders.headers?.get(RegisteredCwtHeaderClaimKey.Algorithm) ??
+      this.unprotectedHeaders.headers?.get(RegisteredCwtHeaderClaimKey.Algorithm)) as MacAlgorithm | undefined
 
     if (!algorithm) {
       throw new CoseInvalidAlgorithmError()
@@ -164,7 +163,7 @@ export class Mac0 extends CborStructure<Mac0EncodedStructure, Mac0DecodedStructu
     return algorithmName
   }
 
-  public static async create(options: Mac0Options, ctx: Mac0Context): Promise<Mac0> {
+  public static create(options: Mac0Options): Mac0 {
     const protectedHeaders =
       options.protectedHeaders instanceof ProtectedHeaders
         ? options.protectedHeaders
@@ -175,31 +174,16 @@ export class Mac0 extends CborStructure<Mac0EncodedStructure, Mac0DecodedStructu
         ? options.unprotectedHeaders
         : UnprotectedHeaders.create({ unprotectedHeaders: options.unprotectedHeaders })
 
-    const ephemeralMacKey = await ctx.createEphemeralKey({
-      privateKey: options.privateKey.encode(),
-      ephemeralPublicKey: options.ephemeralKey.encode(),
-      info: options.info,
-    })
-
     const payload = options.payload ?? options.detachedPayload
     if (!payload) {
       throw new CosePayloadMustBeDefinedError()
     }
 
-    const tag = await ctx.mac({
-      toBeAuthenticated: Mac0.toBeAuthenticated({
-        payload,
-        protectedHeaders: protectedHeaders,
-        externalAad: options.externalAad,
-      }),
-      key: ephemeralMacKey,
-    })
-
-    const mac0 = Mac0.fromDecodedStructure({
+    const mac0 = new Mac0({
       protectedHeaders,
       unprotectedHeaders,
       payload: options.payload ?? null,
-      tag,
+      tag: new Uint8Array(),
     })
 
     mac0.externalAad = options.externalAad
@@ -207,13 +191,35 @@ export class Mac0 extends CborStructure<Mac0EncodedStructure, Mac0DecodedStructu
 
     return mac0
   }
+
+  public async authenticate(
+    options: {
+      key: Uint8Array
+    },
+    ctx: Pick<Mac0Context, 'mac'>
+  ) {
+    const payload = this.payload ?? this.detachedPayload
+    if (!payload) {
+      throw new CosePayloadMustBeDefinedError()
+    }
+
+    this.structure.tag = await ctx.mac({
+      toBeAuthenticated: Mac0.toBeAuthenticated({
+        payload,
+        protectedHeaders: this.protectedHeaders,
+        externalAad: this.externalAad,
+      }),
+      key: options.key,
+    })
+    return this
+  }
 }
 
 addExtension({
   Class: Mac0,
   tag: Mac0.tag,
   encode(instance: Mac0, encodeFn: (obj: unknown) => Uint8Array) {
-    return encodeFn(instance.encodedStructure)
+    return encodeFn(instance)
   },
   decode: (encoded) => Mac0.fromEncodedStructure(encoded as Mac0EncodedStructure),
 })

@@ -9,6 +9,9 @@ catalogs:
     typescript:
       specifier: ~6.0.2
       version: 6.0.3
+    zod:
+      specifier: ^4.4.3
+      version: 4.4.3
 
 importers:
 
@@ -63,11 +66,11 @@ importers:
         specifier: ^1.6.4
         version: 1.6.4
       zod:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: 'catalog:'
+        version: 4.4.3
       zod-validation-error:
         specifier: ^5.0.0
-        version: 5.0.0(zod@4.4.1)
+        version: 5.0.0(zod@4.4.3)
     devDependencies:
       '@noble/curves':
         specifier: ^2.0.1
@@ -103,8 +106,8 @@ importers:
         specifier: workspace:*
         version: link:../identity-common
       zod:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/eudi-lote:
     dependencies:
@@ -115,8 +118,8 @@ importers:
         specifier: workspace:*
         version: link:../identity-common
       zod:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/eudi-sca:
     dependencies:
@@ -142,8 +145,8 @@ importers:
         specifier: ^0.19.0
         version: 0.19.0
       zod:
-        specifier: ^4.3.6
-        version: 4.4.1
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       nock:
         specifier: ^14.0.13
@@ -158,13 +161,16 @@ importers:
         specifier: workspace:*
         version: link:../identity-common
       zod:
-        specifier: ^3.25.42
-        version: 3.25.76
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/identity-common: {}
 
   packages/token-status-list:
     dependencies:
+      '@owf/cose':
+        specifier: workspace:*
+        version: link:../cose
       '@owf/identity-common':
         specifier: workspace:*
         version: link:../identity-common
@@ -174,6 +180,9 @@ importers:
       pako:
         specifier: ^2.1.0
         version: 2.1.0
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       '@types/pako':
         specifier: ^2.0.4
@@ -1988,11 +1997,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
-  zod@4.4.1:
-    resolution: {integrity: sha512-a6ENMBBGZBsnlSebQ/eKCguSBeGKSf4O7BPnqVPmYGtpBYI7VSqoVqw+QcB7kPRjbqPwhYTpFbVj/RqNz/CT0Q==}
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -2411,42 +2417,42 @@ snapshots:
   '@openid4vc/oauth2@0.4.6':
     dependencies:
       '@openid4vc/utils': 0.4.6
-      zod: 4.4.1
+      zod: 4.4.3
 
   '@openid4vc/oauth2@0.5.0-alpha-20260415063740':
     dependencies:
       '@openid4vc/utils': 0.5.0-alpha-20260415063740
-      zod: 4.4.1
+      zod: 4.4.3
 
   '@openid4vc/openid4vci@0.5.0-alpha-20260415063740':
     dependencies:
       '@openid4vc/oauth2': 0.5.0-alpha-20260415063740
       '@openid4vc/utils': 0.5.0-alpha-20260415063740
-      zod: 4.4.1
+      zod: 4.4.3
 
   '@openid4vc/openid4vp@0.4.6':
     dependencies:
       '@openid4vc/oauth2': 0.4.6
       '@openid4vc/utils': 0.4.6
-      zod: 4.4.1
+      zod: 4.4.3
 
   '@openid4vc/utils@0.4.6':
     dependencies:
       buffer: 6.0.3
-      zod: 4.4.1
-      zod-validation-error: 5.0.0(zod@4.4.1)
+      zod: 4.4.3
+      zod-validation-error: 5.0.0(zod@4.4.3)
 
   '@openid4vc/utils@0.5.0-alpha-20260415063740':
     dependencies:
       buffer: 6.0.3
-      zod: 4.4.1
-      zod-validation-error: 5.0.0(zod@4.4.1)
+      zod: 4.4.3
+      zod-validation-error: 5.0.0(zod@4.4.3)
 
   '@owf/mdoc@0.6.0':
     dependencies:
       cbor-x: 1.6.4
-      zod: 4.4.1
-      zod-validation-error: 5.0.0(zod@4.4.1)
+      zod: 4.4.3
+      zod-validation-error: 5.0.0(zod@4.4.3)
 
   '@oxc-project/types@0.126.0': {}
 
@@ -3801,10 +3807,8 @@ snapshots:
 
   yaml@2.8.3: {}
 
-  zod-validation-error@5.0.0(zod@4.4.1):
+  zod-validation-error@5.0.0(zod@4.4.3):
     dependencies:
-      zod: 4.4.1
+      zod: 4.4.3
 
-  zod@3.25.76: {}
-
-  zod@4.4.1: {}
+  zod@4.4.3: {}
