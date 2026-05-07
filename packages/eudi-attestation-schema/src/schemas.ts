@@ -78,6 +78,5 @@ export const SchemaMetaSchema = z.object({
   trustedAuthorities: z.array(TrustAuthoritySchema).optional(),
   attestationLoS: AttestationLoSSchema,
   bindingType: BindingTypeSchema,
-  supportedFormats: z.array(AttestationFormatSchema).min(1),
   schemaURIs: z.array(SchemaURISchema).min(1),
 })

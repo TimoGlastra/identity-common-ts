@@ -39,7 +39,6 @@ describe('signSchemaMeta', () => {
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_basic')
       .bindingType('key')
-      .addFormat('dc+sd-jwt')
       .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
       .build()
 
@@ -94,7 +93,6 @@ describe('signSchemaMeta', () => {
     expect(decoded.version).toBe('1.0.0')
     expect(decoded.rulebookURI).toBe('https://example.com/rulebook.md')
     expect(decoded.attestationLoS).toBe('iso_18045_basic')
-    expect(decoded.supportedFormats).toEqual(['dc+sd-jwt'])
     expect(decoded.iat).toBeTypeOf('number')
   })
 

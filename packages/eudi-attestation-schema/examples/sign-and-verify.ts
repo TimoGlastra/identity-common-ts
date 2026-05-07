@@ -51,8 +51,6 @@ async function main() {
     .rulebookURI('https://legislation.example.eu/eidas2/pid-rulebook')
     .attestationLoS('iso_18045_basic')
     .bindingType('key')
-    .addFormat('dc+sd-jwt')
-    .addFormat('mso_mdoc')
     .addSchemaURI(
       schemaURI().format('dc+sd-jwt').uri('https://catalog.example.com/schemas/pid/sd-jwt/1.0.0.json').build()
     )

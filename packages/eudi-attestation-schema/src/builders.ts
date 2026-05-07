@@ -164,17 +164,6 @@ export class SchemaMetaBuilder {
   }
 
   /**
-   * Add a supported attestation format
-   */
-  addFormat(format: AttestationFormat): this {
-    this.data.supportedFormats = this.data.supportedFormats ?? []
-    if (!this.data.supportedFormats.includes(format)) {
-      this.data.supportedFormats.push(format)
-    }
-    return this
-  }
-
-  /**
    * Add a schema URI
    */
   addSchemaURI(schemaURI: SchemaURI): this {
