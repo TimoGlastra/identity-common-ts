@@ -1,6 +1,14 @@
 import { SchemaMetaException } from './schema-meta-exception'
 import { SchemaMetaSchema, SchemaURISchema, TrustAuthoritySchema } from './schemas'
-import type { AttestationLoS, BindingType, FrameworkType, SchemaMeta, SchemaURI, TrustAuthority } from './types'
+import type {
+  AttestationFormat,
+  AttestationLoS,
+  BindingType,
+  FrameworkType,
+  SchemaMeta,
+  SchemaURI,
+  TrustAuthority,
+} from './types'
 
 /**
  * Builder for creating TrustAuthority objects with a fluent API
