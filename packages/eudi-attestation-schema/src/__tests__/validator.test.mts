@@ -6,7 +6,6 @@ const validSchemaMeta = {
   rulebookURI: 'https://example.com/rulebook.md',
   attestationLoS: 'iso_18045_basic',
   bindingType: 'key',
-  supportedFormats: ['dc+sd-jwt'],
   schemaURIs: [
     {
       formatIdentifier: 'dc+sd-jwt',
@@ -62,16 +61,6 @@ describe('validateSchemaMeta', () => {
     expect(result.valid).toBe(false)
   })
 
-  it('should reject invalid supportedFormats value', () => {
-    const result = validateSchemaMeta({ ...validSchemaMeta, supportedFormats: ['invalid_format'] })
-    expect(result.valid).toBe(false)
-  })
-
-  it('should reject empty supportedFormats', () => {
-    const result = validateSchemaMeta({ ...validSchemaMeta, supportedFormats: [] })
-    expect(result.valid).toBe(false)
-  })
-
   it('should reject empty schemaURIs', () => {
     const result = validateSchemaMeta({ ...validSchemaMeta, schemaURIs: [] })
     expect(result.valid).toBe(false)
@@ -118,6 +107,6 @@ describe('assertValidSchemaMeta', () => {
     assertValidSchemaMeta(data)
     // After assertion, data should be typed as SchemaMeta
     expect(data.version).toBe('1.0.0')
-    expect(data.supportedFormats).toContain('dc+sd-jwt')
+    expect(data.schemaURIs[0].formatIdentifier).toBe('dc+sd-jwt')
   })
 })

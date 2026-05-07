@@ -49,7 +49,6 @@ const meta = schemaMeta()
   )
   .attestationLoS('iso_18045_basic')
   .bindingType('key')
-  .addFormat('dc+sd-jwt')
   .addSchemaURI(
     schemaURI()
       .format('dc+sd-jwt')
@@ -93,7 +92,6 @@ const meta = schemaMeta()
   .rulebookURI('https://example.com/rulebook.md')
   .attestationLoS('iso_18045_basic')
   .bindingType('key')
-  .addFormat('dc+sd-jwt')
   .addSchemaURI(
     schemaURI()
       .format('dc+sd-jwt')
@@ -143,7 +141,6 @@ console.log(header.kid);      // 'catalog-signer-2025'
 | `trustedAuthorities` | No | `TrustAuthority[]` | Trust anchors for attestation issuers |
 | `attestationLoS` | Yes | `AttestationLoS` | Level of security |
 | `bindingType` | Yes | `BindingType` | Cryptographic binding type |
-| `supportedFormats` | Yes | `AttestationFormat[]` | Supported attestation formats |
 | `schemaURIs` | Yes | `SchemaURI[]` | Schema URIs per format |
 
 ### Enumerations

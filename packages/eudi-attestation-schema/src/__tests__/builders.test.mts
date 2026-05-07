@@ -92,7 +92,6 @@ describe('SchemaMetaBuilder', () => {
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_basic')
       .bindingType('key')
-      .addFormat('dc+sd-jwt')
       .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
       .build()
 
@@ -100,7 +99,6 @@ describe('SchemaMetaBuilder', () => {
     expect(meta.rulebookURI).toBe('https://example.com/rulebook.md')
     expect(meta.attestationLoS).toBe('iso_18045_basic')
     expect(meta.bindingType).toBe('key')
-    expect(meta.supportedFormats).toEqual(['dc+sd-jwt'])
     expect(meta.schemaURIs).toHaveLength(1)
   })
 
@@ -119,7 +117,6 @@ describe('SchemaMetaBuilder', () => {
       .addTrustAuthority(ta)
       .attestationLoS('iso_18045_basic')
       .bindingType('key')
-      .addFormat('dc+sd-jwt')
       .addSchemaURI(
         schemaURI()
           .format('dc+sd-jwt')
@@ -143,28 +140,25 @@ describe('SchemaMetaBuilder', () => {
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_high')
       .bindingType('claim')
-      .addFormat('dc+sd-jwt')
-      .addFormat('mso_mdoc')
       .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema-sdjwt.json').build())
       .addSchemaURI(schemaURI().format('mso_mdoc').uri('https://example.com/schema-mdoc.json').build())
       .build()
 
-    expect(meta.supportedFormats).toEqual(['dc+sd-jwt', 'mso_mdoc'])
+    expect(meta.schemaURIs.map((schema) => schema.formatIdentifier)).toEqual(['dc+sd-jwt', 'mso_mdoc'])
     expect(meta.schemaURIs).toHaveLength(2)
   })
 
-  it('should not add duplicate formats', () => {
+  it('should allow duplicate format identifiers across schema URIs', () => {
     const meta = schemaMeta()
       .version('1.0.0')
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_basic')
       .bindingType('none')
-      .addFormat('dc+sd-jwt')
-      .addFormat('dc+sd-jwt')
       .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
+      .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema-v2.json').build())
       .build()
 
-    expect(meta.supportedFormats).toEqual(['dc+sd-jwt'])
+    expect(meta.schemaURIs).toHaveLength(2)
   })
 
   it('should support multiple trust authorities', () => {
@@ -175,7 +169,6 @@ describe('SchemaMetaBuilder', () => {
       .bindingType('key')
       .addTrustAuthority(trustAuthority().frameworkType('etsi_tl').value('https://example.com/tl1.jws').build())
       .addTrustAuthority(trustAuthority().frameworkType('aki').value('dGVzdA').build())
-      .addFormat('dc+sd-jwt')
       .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
       .build()
 
@@ -188,7 +181,6 @@ describe('SchemaMetaBuilder', () => {
         .rulebookURI('https://example.com/rulebook.md')
         .attestationLoS('iso_18045_basic')
         .bindingType('key')
-        .addFormat('dc+sd-jwt')
         .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
         .build()
     }).toThrow('Invalid SchemaMeta')
@@ -198,19 +190,6 @@ describe('SchemaMetaBuilder', () => {
     expect(() => {
       schemaMeta()
         .version('1.0.0')
-        .attestationLoS('iso_18045_basic')
-        .bindingType('key')
-        .addFormat('dc+sd-jwt')
-        .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
-        .build()
-    }).toThrow('Invalid SchemaMeta')
-  })
-
-  it('should throw when supportedFormats is empty', () => {
-    expect(() => {
-      schemaMeta()
-        .version('1.0.0')
-        .rulebookURI('https://example.com/rulebook.md')
         .attestationLoS('iso_18045_basic')
         .bindingType('key')
         .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
@@ -225,7 +204,6 @@ describe('SchemaMetaBuilder', () => {
         .rulebookURI('https://example.com/rulebook.md')
         .attestationLoS('iso_18045_basic')
         .bindingType('key')
-        .addFormat('dc+sd-jwt')
         .build()
     }).toThrow('Invalid SchemaMeta')
   })
@@ -247,7 +225,6 @@ describe('SchemaMetaBuilder', () => {
       )
       .attestationLoS('iso_18045_basic')
       .bindingType('key')
-      .addFormat('dc+sd-jwt')
       .addSchemaURI(
         schemaURI()
           .format('dc+sd-jwt')
@@ -263,7 +240,6 @@ describe('SchemaMetaBuilder', () => {
     expect(meta.version).toBe('1.0.0')
     expect(meta.trustedAuthorities).toHaveLength(1)
     expect(meta.trustedAuthorities?.[0].isLOTE).toBe(true)
-    expect(meta.supportedFormats).toEqual(['dc+sd-jwt'])
     expect(meta.schemaURIs).toHaveLength(1)
   })
 })

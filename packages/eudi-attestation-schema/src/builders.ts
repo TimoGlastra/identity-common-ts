@@ -1,14 +1,6 @@
 import { SchemaMetaException } from './schema-meta-exception'
 import { SchemaMetaSchema, SchemaURISchema, TrustAuthoritySchema } from './schemas'
-import type {
-  AttestationFormat,
-  AttestationLoS,
-  BindingType,
-  FrameworkType,
-  SchemaMeta,
-  SchemaURI,
-  TrustAuthority,
-} from './types'
+import type { AttestationLoS, BindingType, FrameworkType, SchemaMeta, SchemaURI, TrustAuthority } from './types'
 
 /**
  * Builder for creating TrustAuthority objects with a fluent API
@@ -160,17 +152,6 @@ export class SchemaMetaBuilder {
    */
   bindingType(type: BindingType): this {
     this.data.bindingType = type
-    return this
-  }
-
-  /**
-   * Add a supported attestation format
-   */
-  addFormat(format: AttestationFormat): this {
-    this.data.supportedFormats = this.data.supportedFormats ?? []
-    if (!this.data.supportedFormats.includes(format)) {
-      this.data.supportedFormats.push(format)
-    }
     return this
   }
 
