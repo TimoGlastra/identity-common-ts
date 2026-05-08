@@ -10,6 +10,7 @@ const validSchemaMeta = {
     {
       formatIdentifier: 'dc+sd-jwt',
       uri: 'https://example.com/schema.json',
+      meta: { vct: 'eu.europa.ec.eudi.pid.1' },
     },
   ],
 }
@@ -64,6 +65,105 @@ describe('validateSchemaMeta', () => {
   it('should reject empty schemaURIs', () => {
     const result = validateSchemaMeta({ ...validSchemaMeta, schemaURIs: [] })
     expect(result.valid).toBe(false)
+  })
+
+  it('should reject schemaURI missing meta', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [{ formatIdentifier: 'dc+sd-jwt', uri: 'https://example.com/schema.json' }],
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('should accept dc+sd-jwt with vct', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [
+        {
+          formatIdentifier: 'dc+sd-jwt',
+          uri: 'https://example.com/schema.json',
+          meta: { vct: 'eu.europa.ec.eudi.pid.1' },
+        },
+      ],
+    })
+    expect(result.valid).toBe(true)
+  })
+
+  it('should reject dc+sd-jwt meta missing vct', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [{ formatIdentifier: 'dc+sd-jwt', uri: 'https://example.com/schema.json', meta: {} }],
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('should reject dc+sd-jwt meta with unknown fields', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [
+        {
+          formatIdentifier: 'dc+sd-jwt',
+          uri: 'https://example.com/schema.json',
+          meta: { vct: 'eu.europa.ec.eudi.pid.1', unknown_field: 'value' },
+        },
+      ],
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('should accept mso_mdoc with doctype_value', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [
+        {
+          formatIdentifier: 'mso_mdoc',
+          uri: 'https://example.com/schema.json',
+          meta: { doctype_value: 'org.iso.18013.5.1.mDL' },
+        },
+      ],
+    })
+    expect(result.valid).toBe(true)
+  })
+
+  it('should reject mso_mdoc meta missing doctype_value', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [{ formatIdentifier: 'mso_mdoc', uri: 'https://example.com/schema.json', meta: {} }],
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('should reject mso_mdoc meta with unknown fields', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [
+        {
+          formatIdentifier: 'mso_mdoc',
+          uri: 'https://example.com/schema.json',
+          meta: { doctype_value: 'org.iso.18013.5.1.mDL', unknown_field: 'value' },
+        },
+      ],
+    })
+    expect(result.valid).toBe(false)
+  })
+
+  it('should accept the target data shape example from spec', () => {
+    const result = validateSchemaMeta({
+      ...validSchemaMeta,
+      schemaURIs: [
+        {
+          formatIdentifier: 'dc+sd-jwt',
+          uri: 'https://example.org/schemas/pid.json',
+          meta: { vct: 'eu.europa.ec.eudi.pid.1' },
+        },
+        {
+          formatIdentifier: 'mso_mdoc',
+          uri: 'https://example.org/schemas/mdl.json',
+          meta: { doctype_value: 'org.iso.18013.5.1.mDL' },
+        },
+      ],
+    })
+    expect(result.valid).toBe(true)
   })
 
   it('should reject invalid frameworkType in trustedAuthorities', () => {

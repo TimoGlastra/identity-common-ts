@@ -15,8 +15,11 @@ import type {
   AttestationLoSSchema,
   BindingTypeSchema,
   FrameworkTypeSchema,
+  GenericMetaSchema,
+  MsoMdocMetaSchema,
   SchemaMetaSchema,
   SchemaURISchema,
+  SdJwtMetaSchema,
   TrustAuthoritySchema,
 } from './schemas'
 
@@ -34,6 +37,10 @@ export type FrameworkType = z.infer<typeof FrameworkTypeSchema>
 // ============================================================================
 
 export type TrustAuthority = z.infer<typeof TrustAuthoritySchema>
+export type SdJwtMeta = z.infer<typeof SdJwtMetaSchema>
+export type MsoMdocMeta = z.infer<typeof MsoMdocMetaSchema>
+export type GenericMeta = z.infer<typeof GenericMetaSchema>
+export type SchemaURIMeta = SdJwtMeta | MsoMdocMeta | GenericMeta
 export type SchemaURI = z.infer<typeof SchemaURISchema>
 export type SchemaMeta = z.infer<typeof SchemaMetaSchema>
 

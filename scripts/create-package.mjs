@@ -48,7 +48,18 @@ const packageJson = {
   description: `TODO: Add description for ${fullPackageName}`,
   files: ['dist'],
   license: 'Apache-2.0',
-  exports: './src/index.ts',
+  main: './dist/index.cjs',
+  module: './dist/index.mjs',
+  types: './dist/index.d.mts',
+  exports: {
+    '.': {
+      types: './dist/index.d.mts',
+      import: './dist/index.mjs',
+      require: './dist/index.cjs',
+      default: './dist/index.mjs',
+    },
+    './package.json': './package.json',
+  },
   homepage: `https://github.com/openwallet-foundation-labs/identity-common-ts/tree/main/packages/${packageName}`,
   repository: {
     type: 'git',
@@ -57,15 +68,21 @@ const packageJson = {
   },
   publishConfig: {
     access: 'public',
+    main: './dist/index.cjs',
     module: './dist/index.mjs',
     types: './dist/index.d.mts',
     exports: {
-      '.': './dist/index.mjs',
+      '.': {
+        types: './dist/index.d.mts',
+        import: './dist/index.mjs',
+        require: './dist/index.cjs',
+        default: './dist/index.mjs',
+      },
       './package.json': './package.json',
     },
   },
   scripts: {
-    build: 'tsdown src/index.ts --format esm --dts --sourcemap',
+    build: 'tsdown src/index.ts --format esm,cjs --dts --sourcemap',
   },
   dependencies: {},
   devDependencies: {},

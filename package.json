@@ -14,10 +14,11 @@
     "style:fix": "biome check --write --unsafe",
     "md:check": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
     "md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#**/node_modules\"",
+    "packages:check": "node scripts/check-package-entrypoints.mjs",
     "build": "pnpm -r build",
     "test": "vitest",
     "create-package": "node scripts/create-package.mjs",
-    "release": "pnpm build && pnpm changeset publish --no-git-tag 2>&1 | tee changeset-publish.log",
+    "release": "pnpm packages:check && pnpm build && pnpm changeset publish --no-git-tag 2>&1 | tee changeset-publish.log",
     "changeset-version": "pnpm changeset version && pnpm style:fix",
     "prepare": "husky"
   },
