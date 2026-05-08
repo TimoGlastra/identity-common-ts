@@ -26,6 +26,9 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "style": {
+        "useImportType": "error"
+      },
       "correctness": {
         "recommended": true,
         "noUnusedImports": "error"

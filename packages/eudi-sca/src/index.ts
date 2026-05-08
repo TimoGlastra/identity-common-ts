@@ -1,4 +1,5 @@
-export { base64url, Hasher } from '@owf/identity-common'
+export type { Hasher } from '@owf/identity-common'
+export { base64url } from '@owf/identity-common'
 export {
   type CredentialMetadata,
   type CredentialMetadataDisplay,

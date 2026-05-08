@@ -16,11 +16,12 @@
     "md:check": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
     "md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#**/node_modules\"",
     "packages:check": "node scripts/check-package-entrypoints.mjs",
+    "esm:check": "node scripts/check-package-esm-imports.mjs",
     "build": "pnpm -r build",
     "pretest": "pnpm -r build",
     "test": "vitest",
     "create-package": "node scripts/create-package.mjs",
-    "release": "pnpm packages:check && pnpm build && pnpm changeset publish --no-git-tag 2>&1 | tee changeset-publish.log",
+    "release": "pnpm packages:check && pnpm types:check && pnpm build && pnpm esm:check && pnpm changeset publish --no-git-tag 2>&1 | tee changeset-publish.log",
     "changeset-version": "pnpm changeset version && pnpm style:fix",
     "prepare": "husky"
   },
