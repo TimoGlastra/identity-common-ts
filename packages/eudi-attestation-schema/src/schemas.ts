@@ -56,14 +56,51 @@ export const TrustAuthoritySchema = z
   )
 
 // ============================================================================
+// SchemaURI Meta Sub-schemas
+// ============================================================================
+
+/**
+ * Credential-type metadata for dc+sd-jwt format.
+ * vct identifies the credential type per SD-JWT VC spec.
+ */
+export const SdJwtMetaSchema = z
+  .object({
+    vct: z.string().min(1),
+  })
+  .strict()
+
+/**
+ * Credential-type metadata for mso_mdoc format.
+ * doctype_value is required.
+ */
+export const MsoMdocMetaSchema = z
+  .object({
+    doctype_value: z.string().min(1),
+  })
+  .strict()
+
+/**
+ * Credential-type metadata for formats without format-specific fields.
+ * Allows additional properties for forward compatibility.
+ */
+export const GenericMetaSchema = z.object({})
+
+// ============================================================================
 // Schema Sub-class (Section 4.3.2)
 // ============================================================================
 
-export const SchemaURISchema = z.object({
-  formatIdentifier: AttestationFormatSchema,
+const _schemaURIBase = {
   uri: z.string().url(),
   integrity: z.string().optional(),
-})
+}
+
+export const SchemaURISchema = z.discriminatedUnion('formatIdentifier', [
+  z.object({ ..._schemaURIBase, formatIdentifier: z.literal('dc+sd-jwt'), meta: SdJwtMetaSchema }),
+  z.object({ ..._schemaURIBase, formatIdentifier: z.literal('mso_mdoc'), meta: MsoMdocMetaSchema }),
+  z.object({ ..._schemaURIBase, formatIdentifier: z.literal('jwt_vc_json'), meta: GenericMetaSchema }),
+  z.object({ ..._schemaURIBase, formatIdentifier: z.literal('jwt_vc_json-ld'), meta: GenericMetaSchema }),
+  z.object({ ..._schemaURIBase, formatIdentifier: z.literal('ldp_vc'), meta: GenericMetaSchema }),
+])
 
 // ============================================================================
 // SchemaMeta Main Class (Section 4.3.1)

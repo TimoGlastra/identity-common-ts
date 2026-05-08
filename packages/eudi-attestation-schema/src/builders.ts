@@ -7,6 +7,7 @@ import type {
   FrameworkType,
   SchemaMeta,
   SchemaURI,
+  SchemaURIMeta,
   TrustAuthority,
 } from './types'
 
@@ -59,7 +60,7 @@ export class TrustAuthorityBuilder {
  * Builder for creating SchemaURI objects with a fluent API
  */
 export class SchemaURIBuilder {
-  private data: Partial<SchemaURI> = {}
+  private data: Record<string, unknown> = {}
 
   /**
    * Set the format identifier
@@ -82,6 +83,17 @@ export class SchemaURIBuilder {
    */
   integrity(integrity: string): this {
     this.data.integrity = integrity
+    return this
+  }
+
+  /**
+   * Set the format-specific credential metadata.
+   * - dc+sd-jwt: provide { vct }
+   * - mso_mdoc: provide { doctype_value }
+   * - other formats: provide {}
+   */
+  meta(meta: SchemaURIMeta): this {
+    this.data.meta = meta
     return this
   }
 

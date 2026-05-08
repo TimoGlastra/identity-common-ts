@@ -49,11 +49,27 @@ describe('TrustAuthorityBuilder', () => {
 })
 
 describe('SchemaURIBuilder', () => {
-  it('should create a schema URI for dc+sd-jwt format', () => {
-    const schema = schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build()
+  it('should create a schema URI for dc+sd-jwt format with vct', () => {
+    const schema = schemaURI()
+      .format('dc+sd-jwt')
+      .uri('https://example.com/schema.json')
+      .meta({ vct: 'eu.europa.ec.eudi.pid.1' })
+      .build()
 
     expect(schema.formatIdentifier).toBe('dc+sd-jwt')
     expect(schema.uri).toBe('https://example.com/schema.json')
+    expect(schema.meta).toEqual({ vct: 'eu.europa.ec.eudi.pid.1' })
+  })
+
+  it('should create a schema URI for mso_mdoc format', () => {
+    const schema = schemaURI()
+      .format('mso_mdoc')
+      .uri('https://example.com/schema.json')
+      .meta({ doctype_value: 'org.iso.18013.5.1.mDL' })
+      .build()
+
+    expect(schema.formatIdentifier).toBe('mso_mdoc')
+    expect(schema.meta).toEqual({ doctype_value: 'org.iso.18013.5.1.mDL' })
   })
 
   it('should create a schema URI with integrity', () => {
@@ -61,6 +77,7 @@ describe('SchemaURIBuilder', () => {
       .format('mso_mdoc')
       .uri('https://example.com/schema.json')
       .integrity('sha256-M8H+reBt9Nr/s8CRicJrthAnk7UdWyTyONW0N8Z/Axw=')
+      .meta({ doctype_value: 'org.iso.18013.5.1.mDL' })
       .build()
 
     expect(schema.integrity).toBe('sha256-M8H+reBt9Nr/s8CRicJrthAnk7UdWyTyONW0N8Z/Axw=')
@@ -68,19 +85,55 @@ describe('SchemaURIBuilder', () => {
 
   it('should throw when format is missing', () => {
     expect(() => {
-      schemaURI().uri('https://example.com/schema.json').build()
+      schemaURI().uri('https://example.com/schema.json').meta({ vct: 'example.1' }).build()
     }).toThrow('Invalid SchemaURI')
   })
 
   it('should throw when uri is missing', () => {
     expect(() => {
-      schemaURI().format('dc+sd-jwt').build()
+      schemaURI().format('dc+sd-jwt').meta({ vct: 'example.1' }).build()
     }).toThrow('Invalid SchemaURI')
   })
 
   it('should throw when uri is not a valid URL', () => {
     expect(() => {
-      schemaURI().format('dc+sd-jwt').uri('not-a-url').build()
+      schemaURI().format('dc+sd-jwt').uri('not-a-url').meta({ vct: 'example.1' }).build()
+    }).toThrow('Invalid SchemaURI')
+  })
+
+  it('should throw when meta is missing', () => {
+    expect(() => {
+      schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build()
+    }).toThrow('Invalid SchemaURI')
+  })
+
+  it('should throw when dc+sd-jwt meta is missing vct', () => {
+    expect(() => {
+      schemaURI()
+        .format('dc+sd-jwt')
+        .uri('https://example.com/schema.json')
+        .meta({} as { vct: string })
+        .build()
+    }).toThrow('Invalid SchemaURI')
+  })
+
+  it('should throw when mso_mdoc meta is missing doctype_value', () => {
+    expect(() => {
+      schemaURI()
+        .format('mso_mdoc')
+        .uri('https://example.com/schema.json')
+        .meta({} as { doctype_value: string })
+        .build()
+    }).toThrow('Invalid SchemaURI')
+  })
+
+  it('should throw when dc+sd-jwt meta has unknown fields', () => {
+    expect(() => {
+      schemaURI()
+        .format('dc+sd-jwt')
+        .uri('https://example.com/schema.json')
+        .meta({ vct: 'example.1', unknown_field: 'value' } as { vct: string })
+        .build()
     }).toThrow('Invalid SchemaURI')
   })
 })
@@ -92,7 +145,13 @@ describe('SchemaMetaBuilder', () => {
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_basic')
       .bindingType('key')
-      .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
+      .addSchemaURI(
+        schemaURI()
+          .format('dc+sd-jwt')
+          .uri('https://example.com/schema.json')
+          .meta({ vct: 'eu.europa.ec.eudi.pid.1' })
+          .build()
+      )
       .build()
 
     expect(meta.version).toBe('1.0.0')
@@ -122,6 +181,7 @@ describe('SchemaMetaBuilder', () => {
           .format('dc+sd-jwt')
           .uri('https://example.com/schema.json')
           .integrity('sha256-M8H+reBt9Nr/s8CRicJrthAnk7UdWyTyONW0N8Z/Axw=')
+          .meta({ vct: 'eu.europa.ec.eudi.pid.1' })
           .build()
       )
       .build()
@@ -140,8 +200,20 @@ describe('SchemaMetaBuilder', () => {
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_high')
       .bindingType('claim')
-      .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema-sdjwt.json').build())
-      .addSchemaURI(schemaURI().format('mso_mdoc').uri('https://example.com/schema-mdoc.json').build())
+      .addSchemaURI(
+        schemaURI()
+          .format('dc+sd-jwt')
+          .uri('https://example.com/schema-sdjwt.json')
+          .meta({ vct: 'eu.example.schema.1' })
+          .build()
+      )
+      .addSchemaURI(
+        schemaURI()
+          .format('mso_mdoc')
+          .uri('https://example.com/schema-mdoc.json')
+          .meta({ doctype_value: 'org.iso.18013.5.1.mDL' })
+          .build()
+      )
       .build()
 
     expect(meta.schemaURIs.map((schema) => schema.formatIdentifier)).toEqual(['dc+sd-jwt', 'mso_mdoc'])
@@ -154,8 +226,12 @@ describe('SchemaMetaBuilder', () => {
       .rulebookURI('https://example.com/rulebook.md')
       .attestationLoS('iso_18045_basic')
       .bindingType('none')
-      .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
-      .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema-v2.json').build())
+      .addSchemaURI(
+        schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').meta({ vct: 'eu.example.1' }).build()
+      )
+      .addSchemaURI(
+        schemaURI().format('dc+sd-jwt').uri('https://example.com/schema-v2.json').meta({ vct: 'eu.example.2' }).build()
+      )
       .build()
 
     expect(meta.schemaURIs).toHaveLength(2)
@@ -169,7 +245,9 @@ describe('SchemaMetaBuilder', () => {
       .bindingType('key')
       .addTrustAuthority(trustAuthority().frameworkType('etsi_tl').value('https://example.com/tl1.jws').build())
       .addTrustAuthority(trustAuthority().frameworkType('aki').value('dGVzdA').build())
-      .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
+      .addSchemaURI(
+        schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').meta({ vct: 'eu.example.1' }).build()
+      )
       .build()
 
     expect(meta.trustedAuthorities).toHaveLength(2)
@@ -181,7 +259,9 @@ describe('SchemaMetaBuilder', () => {
         .rulebookURI('https://example.com/rulebook.md')
         .attestationLoS('iso_18045_basic')
         .bindingType('key')
-        .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
+        .addSchemaURI(
+          schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').meta({ vct: 'eu.example.1' }).build()
+        )
         .build()
     }).toThrow('Invalid SchemaMeta')
   })
@@ -192,7 +272,9 @@ describe('SchemaMetaBuilder', () => {
         .version('1.0.0')
         .attestationLoS('iso_18045_basic')
         .bindingType('key')
-        .addSchemaURI(schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').build())
+        .addSchemaURI(
+          schemaURI().format('dc+sd-jwt').uri('https://example.com/schema.json').meta({ vct: 'eu.example.1' }).build()
+        )
         .build()
     }).toThrow('Invalid SchemaMeta')
   })
@@ -232,6 +314,7 @@ describe('SchemaMetaBuilder', () => {
             'https://raw.githubusercontent.com/cre8/catalog-of-attestations/main/schemas/gym-membership.dc+sd-jwt.json'
           )
           .integrity('sha256-M8H+reBt9Nr/s8CRicJrthAnk7UdWyTyONW0N8Z/Axw=')
+          .meta({ vct: 'eu.example.gym-membership.1' })
           .build()
       )
       .build()
