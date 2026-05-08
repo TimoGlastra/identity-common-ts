@@ -9,6 +9,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
+    "pretypes:check": "pnpm -r build",
     "types:check": "tsc --noEmit",
     "style:check": "biome check --unsafe",
     "style:fix": "biome check --write --unsafe",
