@@ -1,6 +1,3 @@
-// biome-ignore-all format: test file
-
-export {CoseKey, Mac0Context, MacAlgorithm, Sign1Context,SignatureAlgorithm } from '@owf/cose'
 export type { CreateStatusListCborOptions, StatusListCborWithStatusListOptions } from './cbor/status-list-cbor'
 export { StatusListCbor } from './cbor/status-list-cbor'
 export type { StatusListCwtOptions } from './cbor/status-list-cwt'

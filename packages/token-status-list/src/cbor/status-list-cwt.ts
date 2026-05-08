@@ -1,7 +1,7 @@
+import type { Mac0Context } from '@owf/cose'
 import {
   type CoseKey,
   Cwt,
-  type Mac0Context,
   type ProtectedHeaderOptions,
   ProtectedHeaders,
   type Sign1Context,
