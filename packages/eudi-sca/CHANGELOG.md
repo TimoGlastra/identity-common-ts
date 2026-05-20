@@ -1,5 +1,16 @@
 # @owf/eudi-sca
 
+## 0.3.0
+
+### Minor Changes
+
+- eff25c4: remove export from dependencies
+
+### Patch Changes
+
+- @owf/crypto@0.3.0
+- @owf/identity-common@0.3.0
+
 ## 0.2.0
 
 ### Patch Changes
