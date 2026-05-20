@@ -134,7 +134,7 @@ export class CoseKey extends CborStructure<CoseKeyEncodedStructure, CoseKeyDecod
     return undefined
   }
 
-  public static create(options: CoseKeyOptions): CoseKey {
+  public static create(options: CoseKeyOptions) {
     const map: CoseKeyDecodedStructure = new TypedMap([[CoseKeyParameter.KeyType, options.keyType]])
 
     if (options.keyId !== undefined) {
