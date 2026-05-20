@@ -173,7 +173,8 @@ export class CoseKey extends CborStructure<CoseKeyEncodedStructure, CoseKeyDecod
       map.set(CoseKeyParameter.CurveOrK, options.k)
     }
 
-    return CoseKey.fromDecodedStructure(map)
+    // biome-ignore lint/complexity/noThisInStatic: this.fromDecodedStructure is intentional for subclass support
+    return this.fromDecodedStructure(map)
   }
 
   // TODO: add jwk zod schema
@@ -197,7 +198,8 @@ export class CoseKey extends CborStructure<CoseKeyEncodedStructure, CoseKeyDecod
       return prev
     }, {} as CoseKeyOptions)
 
-    return CoseKey.create(options)
+    // biome-ignore lint/complexity/noThisInStatic: this.create is intentional for subclass support
+    return this.create(options)
   }
 
   public get publicKey() {
