@@ -173,7 +173,7 @@ export class CoseKey extends CborStructure<CoseKeyEncodedStructure, CoseKeyDecod
       map.set(CoseKeyParameter.CurveOrK, options.k)
     }
 
-    // biome-ignore lint/complexity/noThisInStatic: this.create is intentional for subclass support
+    // biome-ignore lint/complexity/noThisInStatic: this.fromDecodedStructure is intentional for subclass support
     return this.fromDecodedStructure(map)
   }
 
