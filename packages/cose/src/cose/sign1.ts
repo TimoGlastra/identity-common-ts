@@ -161,7 +161,8 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
     const rawStructure = cborDecode(bytes)
 
     // May feel weird, but using new this makes TypeScript understand we may return a subclass
-    return new Sign1(
+    // biome-ignore lint/complexity/noThisInStatic: this.decode is intentional for subclass support
+    return new this(
       // NOTE: If decoded with Sign1 tag, the cbor decoder already transforms to the class instances
       // In that case we create new instance based on the decoded structure, to ensure we create the
       // instance based on this (and ensure extended classes work)
@@ -263,7 +264,8 @@ export class Sign1 extends CborStructure<Sign1EncodedStructure, Sign1DecodedStru
           ? UnprotectedHeaders.fromDecodedStructure(options.unprotectedHeaders)
           : UnprotectedHeaders.create({})
 
-    const sign1 = new Sign1({
+    // biome-ignore lint/complexity/noThisInStatic: this.create is intentional for subclass support
+    const sign1 = new this({
       protectedHeaders,
       unprotectedHeaders,
       payload,
