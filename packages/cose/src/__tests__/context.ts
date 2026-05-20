@@ -6,8 +6,6 @@ export const sign1Context: Sign1Context = {
     key: CoseKey
     algorithm: SignatureAlgorithm
   }): Promise<Uint8Array> => new Uint8Array([1, 2, 3]),
-  getPublicKey: async (_options: { certificate: Uint8Array | Uint8Array[]; alg: string }): Promise<Uint8Array> =>
-    new Uint8Array([4, 5, 6]),
   verify: async (_options: { sign1: Sign1; key: Uint8Array | CoseKey }): Promise<boolean> => true,
   x509: {
     getIssuerNameField: (_options: { certificate: Uint8Array | Uint8Array[]; field: string }): string[] => ['a', 'v'],
